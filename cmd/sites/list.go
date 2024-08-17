@@ -1,34 +1,76 @@
 package sites
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
+	"os"
 
+	"github.com/robhenley/go-wpe-cli/cmd/types"
 	"github.com/spf13/cobra"
 )
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list called")
-	},
+	Short: "List your sites",
+	Long:  `List the sites you have access to.`,
+	Run:   list,
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
+	listCmd.Flags().Int("limit", 5, "Limit the number of results")
+}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// listCmd.PersistentFlags().String("foo", "", "A help for foo")
+func list(cmd *cobra.Command, args []string) {
+	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// listCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/sites", config.BaseURL), nil)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+	req.Header.Set("Authorization", "Basic "+config.AuthToken)
+
+	limit, err := cmd.Flags().GetInt("limit")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+	q := req.URL.Query()
+	q.Add("limit", fmt.Sprintf("%d", limit))
+	req.URL.RawQuery = q.Encode()
+
+	response, err := http.DefaultClient.Do(req)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", response.Status)
+		os.Exit(1)
+	}
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+
+	lr := listResponse{}
+	err = json.Unmarshal(body, &lr)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+
+	for _, result := range lr.Results {
+		for _, install := range result.Installs {
+			fmt.Printf("%s\t%s\t%s\t%s\n", install.ID, install.Environment, install.Name, result.Name)
+		}
+	}
+
 }
