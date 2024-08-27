@@ -9,4 +9,5 @@ var (
 type Config struct {
 	BaseURL   string
 	AuthToken string
+	Limit     int
 }
