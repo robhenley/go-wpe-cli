@@ -22,8 +22,9 @@ var createCmd = &cobra.Command{
 func sitesCreate(cmd *cobra.Command, args []string) {
 
 	if len(args) != 2 {
-		fmt.Fprint(os.Stderr, "Please provide an account id and a name\n")
-		os.Exit(1)
+		fmt.Fprint(os.Stderr, "Error: Please provide an account id and a name\n")
+		cmd.Usage()
+		return
 	}
 
 	accountID := args[0]
