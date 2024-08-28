@@ -1,8 +1,10 @@
 package sites
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/robhenley/go-wpe-cli/cmd/types"
 	"github.com/robhenley/go-wpe-cli/internal/api"
@@ -12,23 +14,34 @@ import (
 // getCmd represents the get command
 var getCmd = &cobra.Command{
 	Use:   "get <id>",
-	Short: "Get a single site",
-	Long:  `Get a single site by ID`,
-	Args:  cobra.ExactArgs(1),
-	Run:   get,
+	Short: "Get a site",
+	Long:  `Get a site by its site ID`,
+	Run:   sitesGet,
 }
 
-func get(cmd *cobra.Command, args []string) {
-	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
-
+func sitesGet(cmd *cobra.Command, args []string) {
 	if len(args) != 1 {
-		fmt.Fprint(os.Stderr, "Please provide a site id")
-		os.Exit(1)
+		fmt.Fprint(os.Stderr, "Error: Please provide a site id\n")
+		cmd.Usage()
+		return
 	}
 	id := args[0]
 
+	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
+
 	api := api.NewAPI(config)
 	site := api.SitesGet(id)
+
+	format := cmd.Flag("format").Value.String()
+	if strings.ToLower(format) == "json" {
+		j, err := json.Marshal(site)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%v\n", err)
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", j)
+		return
+	}
 	fmt.Fprintf(os.Stdout, "%v\n", site)
 
 }

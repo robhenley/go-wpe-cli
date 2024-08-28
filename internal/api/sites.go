@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -91,4 +92,76 @@ func (a *API) SitesGet(id string) site {
 
 	return s
 
+}
+
+func (a *API) SitesCreate(accountID, name string) site {
+	pr := sitesCreateRequest{
+		Name:      name,
+		AccountID: accountID,
+	}
+
+	j, err := json.Marshal(pr)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+
+	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/sites", a.Config.BaseURL), bytes.NewReader(j))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Basic "+a.Config.AuthToken)
+
+	response, err := http.DefaultClient.Do(req)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusCreated {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", response.Status)
+		os.Exit(1)
+	}
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+
+	s := site{}
+	err = json.Unmarshal(body, &s)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+
+	return s
+}
+
+func (a *API) SitesDelete(id string) bool {
+	req, err := http.NewRequest(http.MethodDelete, fmt.Sprintf("%s/sites/%s", a.Config.BaseURL, id), nil)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
+
+	response, err := http.DefaultClient.Do(req)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusNoContent {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", response.Status)
+		os.Exit(1)
+	}
+
+	return true
 }

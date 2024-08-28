@@ -16,6 +16,7 @@ type site struct {
 	Tags      []string  `json:"tags"`
 	Installs  []install `json:"installs"`
 }
+
 type install struct {
 	ID          string `json:"id"`
 	Name        string `json:"name"`
@@ -28,4 +29,9 @@ type install struct {
 type sitesListResponse struct {
 	paging
 	Results []site
+}
+
+type sitesCreateRequest struct {
+	Name      string `json:"name"`
+	AccountID string `json:"account_id"`
 }

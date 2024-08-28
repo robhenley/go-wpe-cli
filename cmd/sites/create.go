@@ -1,35 +1,52 @@
 package sites
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
+	"strings"
 
+	"github.com/robhenley/go-wpe-cli/cmd/types"
+	"github.com/robhenley/go-wpe-cli/internal/api"
 	"github.com/spf13/cobra"
 )
 
 // createCmd represents the create command
 var createCmd = &cobra.Command{
-	Use:   "create",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("create called")
-	},
+	Use:   "create <account id> <name>",
+	Short: "Create a new site",
+	Long:  `Create a new site`,
+	Run:   sitesCreate,
 }
 
-func init() {
+func sitesCreate(cmd *cobra.Command, args []string) {
 
-	// Here you will define your flags and configuration settings.
+	if len(args) != 2 {
+		fmt.Fprint(os.Stderr, "Please provide an account id and a name\n")
+		os.Exit(1)
+	}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// createCmd.PersistentFlags().String("foo", "", "A help for foo")
+	accountID := args[0]
+	name := args[1]
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// createCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
+
+	api := api.NewAPI(config)
+
+	site := api.SitesCreate(accountID, name)
+
+	format := cmd.Flag("format").Value.String()
+	if strings.ToLower(format) == "json" {
+		j, err := json.Marshal(site)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+			os.Exit(1)
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", j)
+		return
+	}
+
+	fmt.Fprintf(os.Stdout, "%s %s\n", site.ID, site.Name)
+
 }

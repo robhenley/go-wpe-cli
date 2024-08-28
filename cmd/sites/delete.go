@@ -1,35 +1,63 @@
 package sites
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
+	"strings"
 
+	"github.com/robhenley/go-wpe-cli/cmd/types"
+	"github.com/robhenley/go-wpe-cli/internal/api"
 	"github.com/spf13/cobra"
 )
 
 // deleteCmd represents the delete command
 var deleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("delete called")
-	},
+	Use:   "delete <site id>",
+	Short: "Delete a site",
+	Long: ` This will delete the site and any installs associated with this site. 
+	This delete is permanent and there is no confirmation prompt`,
+	Run: sitesDelete,
 }
 
-func init() {
+func sitesDelete(cmd *cobra.Command, args []string) {
+	if len(args) != 1 {
+		fmt.Fprint(os.Stderr, "Error: Please provide a site id\n")
+		cmd.Usage()
+		return
+	}
 
-	// Here you will define your flags and configuration settings.
+	siteID := args[0]
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// deleteCmd.PersistentFlags().String("foo", "", "A help for foo")
+	format := cmd.Flag("format").Value.String()
+	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
+	api := api.NewAPI(config)
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// deleteCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	isDeleted := api.SitesDelete(siteID)
+
+	out := struct {
+		IsDeleted bool   `json:"is_deleted"`
+		SiteID    string `json:"site_id"`
+	}{
+		IsDeleted: isDeleted,
+		SiteID:    siteID,
+	}
+
+	if isDeleted {
+		if strings.ToLower(format) == "json" {
+
+			j, err := json.Marshal(out)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "%v\n", err)
+			}
+
+			fmt.Fprintf(os.Stdout, "%s\n", j)
+			return
+
+		}
+
+		fmt.Fprintf(os.Stdout, "%s deleted\n", siteID)
+		return
+	}
+
 }
