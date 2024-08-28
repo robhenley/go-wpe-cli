@@ -3,12 +3,12 @@
 The **unofficial** [WP Engine](https://wpengine.com/) CLI based off their [API](https://wpengineapi.com/).
 
 ## Setup
-The config location defaults to `$HOME/.config/wpe/config.yml` but you can also provide the `--config` flag:
+The config location defaults to `$HOME/.config/wpe/config.yaml` but you can also provide the `--config` flag:
 ```bash
-wpe sites list --config path/to/config.yml
+wpe sites list --config path/to/config.yaml
 ```
 The default contents are:
-```yml
+```yaml
 base_url: https://api.wpengineapi.com/v1
 auth_username: <username>
 auth_password: <password>
