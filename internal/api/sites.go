@@ -165,3 +165,51 @@ func (a *API) SitesDelete(id string) bool {
 
 	return true
 }
+
+func (a *API) SitesUpdate(siteID, siteName string) site {
+	su := site{
+		Name: siteName,
+	}
+
+	j, err := json.Marshal(su)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+
+	req, err := http.NewRequest(http.MethodPatch, fmt.Sprintf("%s/sites/%s", a.Config.BaseURL, siteID), bytes.NewReader(j))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Basic "+a.Config.AuthToken)
+
+	response, err := http.DefaultClient.Do(req)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+	defer response.Body.Close()
+
+	if response.StatusCode != http.StatusOK {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", response.Status)
+		os.Exit(1)
+	}
+
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+
+	s := site{}
+	err = json.Unmarshal(body, &s)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+
+	return s
+
+}

@@ -1,29 +1,52 @@
 package sites
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
+	"strings"
 
+	"github.com/robhenley/go-wpe-cli/cmd/types"
+	"github.com/robhenley/go-wpe-cli/internal/api"
 	"github.com/spf13/cobra"
 )
 
 // updateCmd represents the update command
 var updateCmd = &cobra.Command{
-	Use:   "update",
+	Use:   "update <site id> <site name>",
 	Short: "Update a site",
 	Long:  `Long.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("update called")
-	},
+	Run:   sitesUpdate,
 }
 
-func init() {
-	// Here you will define your flags and configuration settings.
+func sitesUpdate(cmd *cobra.Command, args []string) {
+	if len(args) != 2 {
+		fmt.Fprint(os.Stderr, "Error: Please provide a site id and a site name\n")
+		cmd.Usage()
+		return
+	}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// updateCmd.PersistentFlags().String("foo", "", "A help for foo")
+	siteID := args[0]
+	siteName := args[1]
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// updateCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
+
+	api := api.NewAPI(config)
+
+	site := api.SitesUpdate(siteID, siteName)
+
+	format := cmd.Flag("format").Value.String()
+	if strings.ToLower(format) == "json" {
+		j, err := json.Marshal(site)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+			os.Exit(1)
+		}
+
+		fmt.Fprintf(os.Stdout, "%s\n", j)
+		return
+	}
+
+	fmt.Fprintf(os.Stdout, "%s %s\n", site.ID, site.Name)
+
 }
