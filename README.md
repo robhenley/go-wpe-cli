@@ -1,4 +1,4 @@
-# The Unofficial WPEngine (WPE) CLI
+# The Unofficial WP Engine (WPE) CLI
 
 The **unofficial** [WP Engine](https://wpengine.com/) CLI based off their [API](https://wpengineapi.com/).
 
