@@ -57,7 +57,7 @@ func sitesList(cmd *cobra.Command, args []string) {
 	}
 
 	for _, result := range response.Results {
-		fmt.Fprintf(os.Stdout, "%s\t%s\t%s\n", result.ID, result.GroupName, result.Name)
+		fmt.Fprintf(os.Stdout, "%s\t%-15s\t%s\n", result.ID, result.GroupName, result.Name)
 	}
 
 }
