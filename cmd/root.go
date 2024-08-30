@@ -10,6 +10,7 @@ import (
 	"os"
 	"path"
 
+	"github.com/robhenley/go-wpe-cli/cmd/installs"
 	"github.com/robhenley/go-wpe-cli/cmd/sites"
 	"github.com/robhenley/go-wpe-cli/cmd/types"
 	"github.com/spf13/cobra"
@@ -49,6 +50,7 @@ func init() {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	rootCmd.AddCommand(sites.SitesCmd)
+	rootCmd.AddCommand(installs.InstallsCmd)
 }
 
 func initConfig() {
