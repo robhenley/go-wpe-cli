@@ -21,7 +21,7 @@ var listCmd = &cobra.Command{
 
 func init() {
 	listCmd.Flags().Int("page", 1, "The page to return")
-	listCmd.Flags().Int("limit", 10, "Limit the number of results")
+	listCmd.Flags().Int("limit", 100, "Limit the number of results")
 }
 
 func sitesList(cmd *cobra.Command, args []string) {
