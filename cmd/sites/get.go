@@ -42,6 +42,7 @@ func sitesGet(cmd *cobra.Command, args []string) {
 		fmt.Fprintf(os.Stdout, "%s\n", j)
 		return
 	}
-	fmt.Fprintf(os.Stdout, "%v\n", site)
+
+	fmt.Fprintf(os.Stdout, "%s\t%-15s\t%s\n", site.ID, site.GroupName, site.Name)
 
 }
