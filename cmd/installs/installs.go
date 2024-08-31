@@ -1,7 +1,6 @@
 package installs
 
 import (
-	"github.com/robhenley/go-wpe-cli/cmd/installs/cdn"
 	"github.com/robhenley/go-wpe-cli/cmd/installs/domains"
 	"github.com/spf13/cobra"
 )
@@ -23,5 +22,4 @@ func init() {
 	InstallsCmd.AddCommand(updateCmd)
 	InstallsCmd.AddCommand(deleteCmd)
 	InstallsCmd.AddCommand(domains.DomainsCmd)
-	InstallsCmd.AddCommand(cdn.CdnCmd)
 }

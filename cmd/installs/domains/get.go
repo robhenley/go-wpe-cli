@@ -6,20 +6,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// installsDomainsGetCmd represents the installsDomainsGet command
+// domainsGetCmd represents the installsDomainsGet command
 var domainsGetCmd = &cobra.Command{
-	Use:   "get <id>",
-	Short: "",
-	Long:  ``,
+	Use:   "get <install id> <domain id>",
+	Short: "Get a specific domain for a given install",
+	Long:  `Returns specific domain for a given install`,
 	Run:   domainsGet,
 }
 
 func domainsGet(cmd *cobra.Command, args []string) {
-	if len(args) != 1 {
-		fmt.Println("Error: Please provide an install ID")
+	if len(args) != 2 {
+		fmt.Println("Error: Please provide an install ID and the domain ID")
 		cmd.Usage()
 		return
 	}
 
-	// id := args[0]
+	// installID := args[0]
+	// domainID := args[1]
 }
