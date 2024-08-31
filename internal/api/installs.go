@@ -64,6 +64,10 @@ func (a *API) InstallsList(page int, accountID string) (installResponse, error) 
 	}
 	defer res.Body.Close()
 
+	if res.StatusCode != 200 {
+		return installResponse{}, fmt.Errorf("%s", res.Status)
+	}
+
 	ir := installResponse{}
 	err = json.NewDecoder(res.Body).Decode(&ir)
 	if err != nil {
