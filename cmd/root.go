@@ -51,6 +51,7 @@ func init() {
 
 	rootCmd.AddCommand(sites.SitesCmd)
 	rootCmd.AddCommand(installs.InstallsCmd)
+	rootCmd.AddCommand(statusCmd)
 }
 
 func initConfig() {

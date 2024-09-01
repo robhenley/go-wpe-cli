@@ -45,7 +45,7 @@ A placeholder for build instructions...
 
 ## TODO
 
-- [ ] GET    /status
+- [X] GET    /status
 - [ ] GET    /swagger
 - [ ] GET    /accounts
 - [ ] GET    /accounts/{account_id}
