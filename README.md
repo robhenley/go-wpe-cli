@@ -39,3 +39,41 @@ wpe sites list | fzf | grep -oE "^([a-zA-Z0-9-]+)" | wp install backup
 ```bash
 wpe installs list | fzf | grep -oE "^([a-zA-Z0-9-]+)" | wpe installs purge
 ```
+
+## Build Instructions
+A placeholder for build instructions...
+
+## TODO
+
+- [ ] GET    /status
+- [ ] GET    /swagger
+- [ ] GET    /accounts
+- [ ] GET    /accounts/{account_id}
+- [ ] GET    /accounts/{account_id}/account_users
+- [ ] POST   /accounts/{account_id}/account_users
+- [ ] GET    /accounts/{account_id}/account_users/{user_id}
+- [ ] PATCH  /accounts/{account_id}/account_users/{user_id}
+- [ ] DELETE /accounts/{account_id}/account_users/{user_id}
+- [X] GET    /sites
+- [X] POST   /sites
+- [X] GET    /sites/{site_id}
+- [ ] PATCH  /sites/{site_id}
+- [X] DELETE /sites/{site_id}
+- [X] GET    /installs
+- [ ] POST   /installs
+- [ ] GET    /installs/{install_id}
+- [ ] DELETE /installs/{install_id}
+- [ ] PATCH  /installs/{install_id}
+- [ ] GET    /installs/{install_id}/domains
+- [ ] POST   /installs/{install_id}/domains
+- [ ] POST   /installs/{install_id}/domains/bulk
+- [ ] GET    /installs/{install_id}/domains/{domain_id}
+- [ ] PATCH  /installs/{install_id}/domains/{domain_id}
+- [ ] DELETE /installs/{install_id}/domains/{domain_id}
+- [ ] POST   /installs/{install_id}/domains/{domain_id}/check_status
+- [ ] POST   /installs/{install_id}/backups
+- [ ] GET    /installs/{install_id}/backups/{backup_id}
+- [ ] GET    /user
+- [ ] GET    /ssh_keys
+- [ ] POST   /ssh_keys
+- [ ] DELETE /ssh_keys
