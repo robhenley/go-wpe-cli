@@ -47,9 +47,9 @@ A placeholder for build instructions...
 
 - [X] GET    /status
 - [ ] GET    /swagger
-- [ ] GET    /accounts
-- [ ] GET    /accounts/{account_id}
-- [ ] GET    /accounts/{account_id}/account_users
+- [X] GET    /accounts
+- [X] GET    /accounts/{account_id}
+- [X] GET    /accounts/{account_id}/account_users
 - [ ] POST   /accounts/{account_id}/account_users
 - [ ] GET    /accounts/{account_id}/account_users/{user_id}
 - [ ] PATCH  /accounts/{account_id}/account_users/{user_id}

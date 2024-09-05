@@ -10,6 +10,7 @@ import (
 	"os"
 	"path"
 
+	"github.com/robhenley/go-wpe-cli/cmd/accounts"
 	"github.com/robhenley/go-wpe-cli/cmd/installs"
 	"github.com/robhenley/go-wpe-cli/cmd/sites"
 	"github.com/robhenley/go-wpe-cli/cmd/types"
@@ -49,9 +50,10 @@ func init() {
 	rootCmd.PersistentFlags().String("format", "human-readable", "Use this output format. Can be 'human-readable' or 'json'")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
+	rootCmd.AddCommand(statusCmd)
 	rootCmd.AddCommand(sites.SitesCmd)
 	rootCmd.AddCommand(installs.InstallsCmd)
-	rootCmd.AddCommand(statusCmd)
+	rootCmd.AddCommand(accounts.AccountsCmd)
 }
 
 func initConfig() {
