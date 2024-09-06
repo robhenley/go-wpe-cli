@@ -7,7 +7,9 @@ var (
 )
 
 type Config struct {
-	BaseURL   string
-	AuthToken string
-	Limit     int
+	BaseURL           string
+	AuthToken         string
+	BackupDescription string
+	BackupEmails      []string
+	Limit             int
 }

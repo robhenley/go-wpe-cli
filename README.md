@@ -12,6 +12,11 @@ The default contents are:
 base_url: https://api.wpengineapi.com/v1
 auth_username: <username>
 auth_password: <password>
+backup_description: "Plugin Updates"
+backup_emails:
+  - 1@example.com
+  - 2@example.com
+  - 3@example.com
 ```
 
 ## Examples of use
@@ -71,9 +76,9 @@ A placeholder for build instructions...
 - [ ] PATCH  /installs/{install_id}/domains/{domain_id}
 - [ ] DELETE /installs/{install_id}/domains/{domain_id}
 - [ ] POST   /installs/{install_id}/domains/{domain_id}/check_status
-- [ ] POST   /installs/{install_id}/backups
-- [ ] GET    /installs/{install_id}/backups/{backup_id}
-- [ ] GET    /user
-- [ ] GET    /ssh_keys
-- [ ] POST   /ssh_keys
-- [ ] DELETE /ssh_keys
+- [X] POST   /installs/{install_id}/backups
+- [X] GET    /installs/{install_id}/backups/{backup_id}
+- [X] GET    /user
+- [X] GET    /ssh_keys
+- [X] POST   /ssh_keys
+- [X] DELETE /ssh_keys

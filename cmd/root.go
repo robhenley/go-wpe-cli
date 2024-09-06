@@ -13,7 +13,9 @@ import (
 	"github.com/robhenley/go-wpe-cli/cmd/accounts"
 	"github.com/robhenley/go-wpe-cli/cmd/installs"
 	"github.com/robhenley/go-wpe-cli/cmd/sites"
+	"github.com/robhenley/go-wpe-cli/cmd/ssh_keys"
 	"github.com/robhenley/go-wpe-cli/cmd/types"
+	users "github.com/robhenley/go-wpe-cli/cmd/user"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -54,6 +56,8 @@ func init() {
 	rootCmd.AddCommand(sites.SitesCmd)
 	rootCmd.AddCommand(installs.InstallsCmd)
 	rootCmd.AddCommand(accounts.AccountsCmd)
+	rootCmd.AddCommand(users.UsersCmd)
+	rootCmd.AddCommand(ssh_keys.SSHKeysCmd)
 }
 
 func initConfig() {
@@ -78,13 +82,19 @@ func initConfig() {
 	username := viper.GetString("auth_username")
 	password := viper.GetString("auth_password")
 	baseURL := viper.GetString("base_url")
+	backupDescription := viper.GetString("backup_description")
+	backupEmails := viper.GetStringSlice("backup_emails")
 
 	data := fmt.Sprintf("%s:%s", username, password)
 	token := base64.StdEncoding.EncodeToString([]byte(data))
 	config := types.Config{
-		BaseURL:   baseURL,
-		AuthToken: token,
+		BaseURL:           baseURL,
+		AuthToken:         token,
+		BackupDescription: backupDescription,
+		BackupEmails:      backupEmails,
 	}
+
+	// log.Fatalf("%v", config)
 
 	ctx := context.WithValue(context.Background(), types.ContextKeyCmdConfig, config)
 	rootCmd.SetContext(ctx)

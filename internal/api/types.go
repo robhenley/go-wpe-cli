@@ -1,5 +1,7 @@
 package api
 
+import "time"
+
 type paging struct {
 	Previous any `json:"previous"`
 	Next     any `json:"next"`
@@ -50,6 +52,12 @@ type install struct {
 	IsMultisite   bool     `json:"is_multisite"`
 }
 
+type sshKey struct {
+	Comment     string    `json:"comment"`
+	CreatedAt   time.Time `json:"created_at"`
+	Fingerprint string    `json:"fingerprint"`
+	UUID        string    `json:"uuid"`
+}
 type sitesListResponse struct {
 	paging
 	Results []site
@@ -99,4 +107,45 @@ type accountsResponse struct {
 type accountsUsersResponse struct {
 	paging
 	Results []user
+}
+
+type backupRequest struct {
+	Description        string   `json:"description"`
+	NotificationEmails []string `json:"notification_emails"`
+}
+
+type backupResponse struct {
+	ID     string `json:"id"`
+	Status string `json:"status"`
+}
+
+type sshKeyResponse struct {
+	paging
+	Results []sshKey `json:"results"`
+}
+
+type currentUser struct {
+	ID        string `json:"id"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Email     string `json:"email"`
+	Phone     string `json:"phone_number"`
+}
+
+// type apiError struct {
+// 	Resource string `json:"resource"`
+// 	Field    string `json:"field"`
+// 	Type     string `json:"type"`
+// 	Code     string `json:"code"`
+// 	Message  string `json:"message"`
+// }
+// type errorResponse struct {
+// 	Message          string     `json:"message"`
+// 	DocumentationURL string     `json:"documentation_url"`
+// 	Errors           []apiError `json:"errors"`
+// }
+
+type objDeleted struct {
+	ID        string `json:"id"`
+	IsDeleted bool   `json:"is_deleted"`
 }
