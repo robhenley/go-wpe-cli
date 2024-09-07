@@ -23,3 +23,4 @@ go.work
 bin/
 .DS_Store
 scratch/
+.envrc
