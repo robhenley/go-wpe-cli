@@ -56,9 +56,9 @@ A placeholder for build instructions...
 - [X] GET    /accounts/{account_id}
 - [X] GET    /accounts/{account_id}/account_users
 - [ ] POST   /accounts/{account_id}/account_users
-- [ ] GET    /accounts/{account_id}/account_users/{user_id}
+- [X] GET    /accounts/{account_id}/account_users/{user_id}
 - [ ] PATCH  /accounts/{account_id}/account_users/{user_id}
-- [ ] DELETE /accounts/{account_id}/account_users/{user_id}
+- [X] DELETE /accounts/{account_id}/account_users/{user_id}
 - [X] GET    /sites
 - [X] POST   /sites
 - [X] GET    /sites/{site_id}

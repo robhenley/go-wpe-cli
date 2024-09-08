@@ -110,3 +110,60 @@ func (a *API) AccountsUsersList(accountID string, page int) ([]user, error) {
 
 	return ur.Results, nil
 }
+
+func (a *API) AccountsUsersGet(accountID, userID string) (user, error) {
+	u := user{}
+
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/accounts/%s/account_users/%s", a.Config.BaseURL, accountID, userID), nil)
+	if err != nil {
+		return u, err
+	}
+	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return u, err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return u, fmt.Errorf("%s", res.Status)
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&u)
+	if err != nil {
+		return u, err
+	}
+
+	return u, nil
+}
+
+func (a *API) AccountsUsersDelete(accountID, userID string) (objDeleted, error) {
+	od := objDeleted{
+		ID:        userID,
+		IsDeleted: false,
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, fmt.Sprintf("%s/accounts/%s/account_users/%s", a.Config.BaseURL, accountID, userID), nil)
+	if err != nil {
+		return od, nil
+	}
+	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return od, err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusNoContent {
+		return od, fmt.Errorf("%s", res.Status)
+	}
+
+	od.IsDeleted = true
+
+	return od, nil
+}
+
+func (a *API) AccountsUsersCreate(accountID string) error {
+	// req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/accounts/%s/account_users", a.Config.BaseURL, accountID), nil)
+	return nil
+}

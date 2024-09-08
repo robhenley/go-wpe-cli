@@ -27,6 +27,17 @@ type user struct {
 	Installs       []install `json:"installs"`
 }
 
+type userCreateRequest struct {
+	User struct {
+		AccountID  string   `json:"account_id"`
+		FirstName  string   `json:"first_name"`
+		LastName   string   `json:"last_name"`
+		Email      string   `json:"email"`
+		Roles      string   `json:"roles"`
+		InstallIds []string `json:"install_ids"`
+	} `json:"user"`
+}
+
 type site struct {
 	ID        string    `json:"id"`
 	Name      string    `json:"name"`

@@ -19,4 +19,8 @@ var AccountsUsersCmd = &cobra.Command{
 
 func init() {
 	AccountsUsersCmd.AddCommand(accountsUsersListCmd)
+	AccountsUsersCmd.AddCommand(accountsUsersCreateCmd)
+	AccountsUsersCmd.AddCommand(accountsUsersGetCmd)
+	AccountsUsersCmd.AddCommand(accountsUsersUpdateCmd)
+	AccountsUsersCmd.AddCommand(accountsUsersDeleteCmd)
 }

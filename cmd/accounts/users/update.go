@@ -11,20 +11,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// accountsUsersListCmd represents the accounts command
-var accountsUsersListCmd = &cobra.Command{
-	Use:   "list <account id>",
-	Short: "List your WP Engine accounts",
-	Long:  `Use this to list your WP Engine accounts.`,
-	Run:   accountsUsersList,
+// accountsUsersUpdateCmd represents the accounts command
+var accountsUsersUpdateCmd = &cobra.Command{
+	Use:   "update <account id>",
+	Short: "",
+	Long:  ``,
+	Run:   accountsUsersUpdate,
 }
 
 func init() {
-	accountsUsersListCmd.Flags().Int("page", 1, "The page to return")
-	accountsUsersListCmd.Flags().Int("limit", 100, "Limit the number of results")
+	accountsUsersUpdateCmd.Flags().Int("page", 1, "The page to return")
+	accountsUsersUpdateCmd.Flags().Int("limit", 100, "Limit the number of results")
 }
 
-func accountsUsersList(cmd *cobra.Command, args []string) {
+func accountsUsersUpdate(cmd *cobra.Command, args []string) {
 	if len(args) != 1 {
 		cmd.Usage()
 		return

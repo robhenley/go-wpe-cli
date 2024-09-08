@@ -8,6 +8,7 @@ import (
 
 	"github.com/robhenley/go-wpe-cli/cmd/types"
 	"github.com/robhenley/go-wpe-cli/internal/api"
+	"github.com/robhenley/go-wpe-cli/internal/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -70,8 +71,15 @@ func installsList(cmd *cobra.Command, args []string) {
 		return
 	}
 
+	var lines []string
 	for _, install := range installs.Results {
-		fmt.Fprintf(os.Stdout, "%s\t%-15s\t%-15s\t%s\n", install.ID, install.Environment, install.Name, install.PrimaryDomain)
+		// fmt.Fprintf(os.Stdout, "%s\t%-15s\t%-15s\t%s\n", install.ID, install.Environment, install.Name, install.PrimaryDomain)
+		lines = append(lines, fmt.Sprintf("%s %-15s %-15s %s\n", install.ID, install.Environment, install.Name, install.PrimaryDomain))
 	}
 
+	code, err := ui.Display(lines)
+	if err != nil {
+		cmd.PrintErrf("Error: %s", err.Error())
+		os.Exit(code)
+	}
 }
