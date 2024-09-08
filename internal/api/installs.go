@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -76,4 +77,70 @@ func (a *API) InstallsList(page int, accountID string) (installResponse, error) 
 
 	return ir, nil
 
+}
+
+func (a *API) InstallsGet(installID string) (install, error) {
+	install := install{}
+
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/installs/%s", a.Config.BaseURL, installID), nil)
+	if err != nil {
+		return install, err
+	}
+	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return install, err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return install, fmt.Errorf("%s", res.Status)
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&install)
+	if err != nil {
+		return install, err
+	}
+
+	return install, nil
+}
+
+func (a *API) InstallsCreate(name, accountID, siteID, environment string) (install, error) {
+	install := install{}
+
+	ir := installCreateRequest{
+		Name:        name,
+		AccountID:   accountID,
+		SiteID:      siteID,
+		Environment: environment,
+	}
+
+	j, err := json.Marshal(ir)
+	if err != nil {
+		return install, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/installs", a.Config.BaseURL), bytes.NewReader(j))
+	if err != nil {
+		return install, err
+	}
+	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return install, err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusCreated {
+		return install, fmt.Errorf("%s", res.Status)
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&install)
+	if err != nil {
+		return install, err
+	}
+
+	return install, nil
 }

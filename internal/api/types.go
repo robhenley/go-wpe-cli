@@ -63,6 +63,13 @@ type install struct {
 	IsMultisite   bool     `json:"is_multisite"`
 }
 
+type installCreateRequest struct {
+	Name        string `json:"name"`
+	AccountID   string `json:"account_id"`
+	SiteID      string `json:"site_id"`
+	Environment string `json:"environment"`
+}
+
 type sshKey struct {
 	Comment     string    `json:"comment"`
 	CreatedAt   time.Time `json:"created_at"`

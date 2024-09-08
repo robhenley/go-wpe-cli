@@ -66,7 +66,7 @@ A placeholder for build instructions...
 - [X] DELETE /sites/{site_id}
 - [X] GET    /installs
 - [ ] POST   /installs
-- [ ] GET    /installs/{install_id}
+- [X] GET    /installs/{install_id}
 - [ ] DELETE /installs/{install_id}
 - [ ] PATCH  /installs/{install_id}
 - [ ] GET    /installs/{install_id}/domains

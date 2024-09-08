@@ -17,11 +17,11 @@ var InstallsCmd = &cobra.Command{
 }
 
 func init() {
-	InstallsCmd.AddCommand(getCmd)
-	InstallsCmd.AddCommand(listCmd)
-	InstallsCmd.AddCommand(createCmd)
-	InstallsCmd.AddCommand(updateCmd)
-	InstallsCmd.AddCommand(deleteCmd)
+	InstallsCmd.AddCommand(installsGetCmd)
+	InstallsCmd.AddCommand(installsListCmd)
+	InstallsCmd.AddCommand(installsCreateCmd)
+	InstallsCmd.AddCommand(installsUpdateCmd)
+	InstallsCmd.AddCommand(installsDeleteCmd)
 	InstallsCmd.AddCommand(domains.DomainsCmd)
 	InstallsCmd.AddCommand(backups.BackupsCmd)
 }

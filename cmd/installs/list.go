@@ -12,8 +12,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// listCmd represents the list command
-var listCmd = &cobra.Command{
+// installsListCmd represents the list command
+var installsListCmd = &cobra.Command{
 	Use:   "list [account id]",
 	Short: "List your WordPress installations",
 	Long:  `List your WordPress installations`,
@@ -21,8 +21,8 @@ var listCmd = &cobra.Command{
 }
 
 func init() {
-	listCmd.Flags().Int("page", 1, "The page to return")
-	listCmd.Flags().Int("limit", 100, "Limit the number of results")
+	installsListCmd.Flags().Int("page", 1, "The page to return")
+	installsListCmd.Flags().Int("limit", 100, "Limit the number of results")
 }
 
 func installsList(cmd *cobra.Command, args []string) {
