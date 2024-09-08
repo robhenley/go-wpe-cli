@@ -35,14 +35,22 @@ jq '.Results[] | "\(.id) \(.group_name) \(.name)"' -r
 wpe sites create <account_id> "A new site"
 ```
 
-**Backup a site**
+**Backup an install**
 ```bash
-wpe sites list | fzf | grep -oE "^([a-zA-Z0-9-]+)" | wp install backup
+wpe install list --ui | wpe install backup create -
+```
+
+```bash
+wpe install list | fzf | grep -oE "^([a-zA-Z0-9-]+)" | wpe install backup create -
+```
+
+```bash
+wpe sites list | fzf --bind 'enter:become(echo {1})' | wpe install backup create -
 ```
 
 **Purge a sites cache**
 ```bash
-wpe installs list | fzf | grep -oE "^([a-zA-Z0-9-]+)" | wpe installs purge
+wpe installs list | fzf | grep -oE "^([a-zA-Z0-9-]+)" | wpe installs purge -
 ```
 
 ## Build Instructions

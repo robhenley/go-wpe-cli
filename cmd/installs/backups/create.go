@@ -1,6 +1,7 @@
 package backups
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -28,6 +29,23 @@ func installsBackupsCreate(cmd *cobra.Command, args []string) {
 	if len(args) != 1 {
 		cmd.Usage()
 		return
+	}
+
+	installID := args[0]
+
+	// Allow for explicit stdin
+	if args[0] == "-" {
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			installID = scanner.Text()
+		}
+
+		if err := scanner.Err(); err != nil {
+			cmd.PrintErrf("Error reading from stdin: %s\n", err.Error())
+			return
+		}
+
+		installID = strings.Trim(installID, " ")
 	}
 
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
@@ -66,8 +84,6 @@ func installsBackupsCreate(cmd *cobra.Command, args []string) {
 		cmd.PrintErrf("Error: %s", err.Error())
 		return
 	}
-
-	installID := args[0]
 
 	api := api.NewAPI(config)
 	backup, err := api.InstallsBackupsCreate(installID, description, emails)
