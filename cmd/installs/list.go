@@ -23,6 +23,7 @@ var installsListCmd = &cobra.Command{
 func init() {
 	installsListCmd.Flags().Int("page", 1, "The page to return")
 	installsListCmd.Flags().Int("limit", 100, "Limit the number of results")
+	installsListCmd.Flags().Bool("ui", false, "Enable the fuzzy finder (fzf) UI")
 }
 
 func installsList(cmd *cobra.Command, args []string) {
@@ -45,6 +46,12 @@ func installsList(cmd *cobra.Command, args []string) {
 		return
 	}
 	config.Limit = limit
+
+	enableUI, err := cmd.Flags().GetBool("ui")
+	if err != nil {
+		cmd.PrintErrf("Error: %s", err.Error())
+		return
+	}
 
 	api := api.NewAPI(config)
 	installs, err := api.InstallsList(page, accountID)
@@ -71,15 +78,22 @@ func installsList(cmd *cobra.Command, args []string) {
 		return
 	}
 
-	var lines []string
-	for _, install := range installs.Results {
-		// fmt.Fprintf(os.Stdout, "%s\t%-15s\t%-15s\t%s\n", install.ID, install.Environment, install.Name, install.PrimaryDomain)
-		lines = append(lines, fmt.Sprintf("%s %-15s %-15s %s\n", install.ID, install.Environment, install.Name, install.PrimaryDomain))
+	if enableUI {
+		var lines []string
+		for _, install := range installs.Results {
+			lines = append(lines, fmt.Sprintf("%s %-15s %-15s %s\n", install.ID, install.Environment, install.Name, install.PrimaryDomain))
+		}
+
+		code, err := ui.Display(lines)
+		if err != nil {
+			cmd.PrintErrf("Error: %s", err.Error())
+			os.Exit(code)
+		}
+
+		return
 	}
 
-	code, err := ui.Display(lines)
-	if err != nil {
-		cmd.PrintErrf("Error: %s", err.Error())
-		os.Exit(code)
+	for _, install := range installs.Results {
+		fmt.Fprintf(os.Stdout, "%s\t%-15s\t%-15s\t%s\n", install.ID, install.Environment, install.Name, install.PrimaryDomain)
 	}
 }
