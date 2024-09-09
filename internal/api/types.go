@@ -70,6 +70,15 @@ type installCreateRequest struct {
 	Environment string `json:"environment"`
 }
 
+type installPurgeCacheRequest struct {
+	CacheType string `json:"type"`
+}
+
+type installPurgeCacheResponse struct {
+	CacheType string `json:"type"`
+	IsPurged  bool   `json:"is_purged"`
+}
+
 type sshKey struct {
 	Comment     string    `json:"comment"`
 	CreatedAt   time.Time `json:"created_at"`

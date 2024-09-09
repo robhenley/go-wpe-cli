@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"slices"
+	"strings"
 )
 
 func (a *API) APIStatus() {
@@ -143,4 +145,49 @@ func (a *API) InstallsCreate(name, accountID, siteID, environment string) (insta
 	}
 
 	return install, nil
+}
+
+func (a *API) InstallsPurgeCache(installID, cacheType string) (installPurgeCacheResponse, error) {
+	pr := installPurgeCacheResponse{
+		CacheType: cacheType,
+		IsPurged:  false,
+	}
+
+	if !isValidCacheType(cacheType) {
+		return pr, fmt.Errorf("invalid cache type: %s", cacheType)
+	}
+
+	purgeReq := installPurgeCacheRequest{
+		CacheType: cacheType,
+	}
+
+	j, err := json.Marshal(purgeReq)
+	if err != nil {
+		return pr, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/installs/%s/purge_cache", a.Config.BaseURL, installID), bytes.NewBuffer(j))
+	if err != nil {
+		return pr, err
+	}
+	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return pr, err
+	}
+
+	if res.StatusCode != http.StatusAccepted {
+		return pr, fmt.Errorf("%s", res.Status)
+	}
+
+	pr.IsPurged = true
+
+	return pr, nil
+}
+
+func isValidCacheType(cacheType string) bool {
+	valid := []string{"object", "page", "cdn"}
+
+	return slices.Contains(valid, strings.ToLower(cacheType))
 }
