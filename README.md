@@ -86,6 +86,7 @@ A placeholder for build instructions...
 - [ ] POST   /installs/{install_id}/domains/{domain_id}/check_status
 - [X] POST   /installs/{install_id}/backups
 - [X] GET    /installs/{install_id}/backups/{backup_id}
+- [ ] POST   /installs/{install_id}/purge_cache
 - [X] GET    /user
 - [X] GET    /ssh_keys
 - [X] POST   /ssh_keys
