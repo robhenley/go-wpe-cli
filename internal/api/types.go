@@ -96,17 +96,17 @@ type sitesCreateRequest struct {
 	AccountID string `json:"account_id"`
 }
 
-type redirects struct {
+type redirect struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
 type domain struct {
-	Name        string      `json:"name"`
-	Duplicate   bool        `json:"duplicate"`
-	Primary     bool        `json:"primary"`
-	ID          string      `json:"id"`
-	RedirectsTo []redirects `json:"redirects_to"`
+	Name       string   `json:"name"`
+	Duplicate  bool     `json:"duplicate"`
+	Primary    bool     `json:"primary"`
+	ID         string   `json:"id"`
+	RedirectTo redirect `json:"redirect_to"`
 }
 
 type installDomainsListResponse struct {
@@ -115,11 +115,11 @@ type installDomainsListResponse struct {
 }
 
 type InstallDomainCDNStatusResponse struct {
-	Name        string      `json:"name"`
-	Duplicate   bool        `json:"duplicate"`
-	Primary     bool        `json:"primary"`
-	ID          string      `json:"id"`
-	RedirectsTo []redirects `json:"redirects_to"`
+	Name        string     `json:"name"`
+	Duplicate   bool       `json:"duplicate"`
+	Primary     bool       `json:"primary"`
+	ID          string     `json:"id"`
+	RedirectsTo []redirect `json:"redirects_to"`
 }
 
 type installResponse struct {
