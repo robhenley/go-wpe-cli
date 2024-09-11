@@ -9,15 +9,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// domainsCdnStatusCmd represents the cdn command
-var domainsCdnStatusCmd = &cobra.Command{
+// installsDomainsCdnStatusCmd represents the cdn command
+var installsDomainsCdnStatusCmd = &cobra.Command{
 	Use:   "cdn <install id> <domain id>",
 	Short: "Check the status of a domain",
 	Long:  `Submits a request to check the status of the domain`,
-	Run:   domainsCdnStatus,
+	Run:   installsDomainsCdnStatus,
 }
 
-func domainsCdnStatus(cmd *cobra.Command, args []string) {
+func installsDomainsCdnStatus(cmd *cobra.Command, args []string) {
 	if len(args) != 2 {
 		cmd.Usage()
 		return
