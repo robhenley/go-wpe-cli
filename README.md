@@ -87,7 +87,7 @@ A placeholder for build instructions...
 - [X] GET    /installs
 - [ ] POST   /installs
 - [X] GET    /installs/{install_id}
-- [ ] DELETE /installs/{install_id}
+- [X] DELETE /installs/{install_id}
 - [ ] PATCH  /installs/{install_id}
 - [ ] GET    /installs/{install_id}/domains
 - [ ] POST   /installs/{install_id}/domains
