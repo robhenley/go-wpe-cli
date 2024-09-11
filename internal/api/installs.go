@@ -16,14 +16,12 @@ func (a *API) APIStatus() {
 func (a *API) InstallDomainCDNStatus(install, domainID string) (InstallDomainCDNStatusResponse, error) {
 	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/installs/%s/domains/%s/check_status", a.Config.BaseURL, install, domainID), nil)
 	if err != nil {
-		// fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		return InstallDomainCDNStatusResponse{}, err
 	}
 
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", a.Config.AuthToken))
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		// fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		return InstallDomainCDNStatusResponse{}, err
 	}
 	defer res.Body.Close()
@@ -31,7 +29,6 @@ func (a *API) InstallDomainCDNStatus(install, domainID string) (InstallDomainCDN
 	ir := InstallDomainCDNStatusResponse{}
 	err = json.NewDecoder(res.Body).Decode(&ir)
 	if err != nil {
-		// fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		return InstallDomainCDNStatusResponse{}, err
 	}
 
@@ -190,4 +187,30 @@ func isValidCacheType(cacheType string) bool {
 	valid := []string{"object", "page", "cdn"}
 
 	return slices.Contains(valid, strings.ToLower(cacheType))
+}
+
+func (a *API) InstallsDelete(installID string) (objDeleted, error) {
+	od := objDeleted{
+		ID:        installID,
+		IsDeleted: false,
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, fmt.Sprintf("%s/installs/%s", a.Config.BaseURL, installID), nil)
+	if err != nil {
+		return od, err
+	}
+	req.Header.Set("Authorization", "Basic "+a.Config.BaseURL)
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return od, err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusNoContent {
+		return od, fmt.Errorf("%s", res.Status)
+	}
+
+	od.IsDeleted = true
+
+	return od, nil
 }
