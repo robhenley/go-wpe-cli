@@ -42,3 +42,29 @@ func (a *API) InstallDomainsList(installID string, page int) ([]domain, error) {
 
 	return dr.Results, nil
 }
+
+func (a *API) InstallsDomainsGet(installID, domainID string) (domain, error) {
+	d := domain{}
+	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/installs/%s/domains/%s", a.Config.BaseURL, installID, domainID), nil)
+	if err != nil {
+		return d, err
+	}
+	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return d, err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return d, fmt.Errorf("%s", res.Status)
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&d)
+	if err != nil {
+		return d, err
+	}
+
+	return d, nil
+}

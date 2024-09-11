@@ -11,20 +11,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// domainsListCmd represents the domains list command
-var domainsListCmd = &cobra.Command{
+// installsDomainsListCmd represents the domains list command
+var installsDomainsListCmd = &cobra.Command{
 	Use:   "list <install id>",
 	Short: "Get the domains for an install by install ID",
 	Long:  `Returns domains for a specific install.`,
-	Run:   domainsList,
+	Run:   installsDomainsList,
 }
 
 func init() {
-	domainsListCmd.Flags().Int("page", 1, "The page to return")
-	domainsListCmd.Flags().Int("limit", 100, "Limit the number of results")
+	installsDomainsListCmd.Flags().Int("page", 1, "The page to return")
+	installsDomainsListCmd.Flags().Int("limit", 100, "Limit the number of results")
 }
 
-func domainsList(cmd *cobra.Command, args []string) {
+func installsDomainsList(cmd *cobra.Command, args []string) {
 	if len(args) != 1 {
 		cmd.Usage()
 		return

@@ -89,10 +89,10 @@ A placeholder for build instructions...
 - [X] GET    /installs/{install_id}
 - [X] DELETE /installs/{install_id}
 - [ ] PATCH  /installs/{install_id}
-- [ ] GET    /installs/{install_id}/domains
+- [X] GET    /installs/{install_id}/domains
 - [ ] POST   /installs/{install_id}/domains
 - [ ] POST   /installs/{install_id}/domains/bulk
-- [ ] GET    /installs/{install_id}/domains/{domain_id}
+- [X] GET    /installs/{install_id}/domains/{domain_id}
 - [ ] PATCH  /installs/{install_id}/domains/{domain_id}
 - [ ] DELETE /installs/{install_id}/domains/{domain_id}
 - [ ] POST   /installs/{install_id}/domains/{domain_id}/check_status
