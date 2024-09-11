@@ -12,6 +12,7 @@ The default contents are:
 base_url: https://api.wpengineapi.com/v1
 auth_username: <username>
 auth_password: <password>
+cache_type: "object"
 backup_description: "Plugin Updates"
 backup_emails:
   - 1@example.com
@@ -48,9 +49,20 @@ wpe install list | fzf | grep -oE "^([a-zA-Z0-9-]+)" | wpe install backup create
 wpe sites list | fzf --bind 'enter:become(echo {1})' | wpe install backup create -
 ```
 
-**Purge a sites cache**
+**Purge an installs cache**
+Purge an installs page cache:
 ```bash
-wpe installs list | fzf | grep -oE "^([a-zA-Z0-9-]+)" | wpe installs purge -
+wpe installs purge 912d4b68-6a7e-4b85-8a3e-95524b63ff41 page
+```
+
+Purge an installs object cache:
+```bash
+wpe installs list --ui | wpe installs purge -
+```
+
+Purge an installs CDN cache:
+```bash
+wpe installs list --ui | wpe installs purge - cdn
 ```
 
 ## Build Instructions
@@ -86,7 +98,7 @@ A placeholder for build instructions...
 - [ ] POST   /installs/{install_id}/domains/{domain_id}/check_status
 - [X] POST   /installs/{install_id}/backups
 - [X] GET    /installs/{install_id}/backups/{backup_id}
-- [ ] POST   /installs/{install_id}/purge_cache
+- [X] POST   /installs/{install_id}/purge_cache
 - [X] GET    /user
 - [X] GET    /ssh_keys
 - [X] POST   /ssh_keys

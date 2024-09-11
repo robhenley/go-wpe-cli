@@ -147,14 +147,14 @@ func (a *API) InstallsCreate(name, accountID, siteID, environment string) (insta
 	return install, nil
 }
 
-func (a *API) InstallsPurgeCache(installID, cacheType string) (installPurgeCacheResponse, error) {
+func (a *API) InstallsCachePurge(installID, cacheType string) (installPurgeCacheResponse, error) {
 	pr := installPurgeCacheResponse{
 		CacheType: cacheType,
 		IsPurged:  false,
 	}
 
 	if !isValidCacheType(cacheType) {
-		return pr, fmt.Errorf("invalid cache type: %s", cacheType)
+		return pr, fmt.Errorf("invalid cache type %s", cacheType)
 	}
 
 	purgeReq := installPurgeCacheRequest{

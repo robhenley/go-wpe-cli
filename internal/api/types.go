@@ -75,6 +75,7 @@ type installPurgeCacheRequest struct {
 }
 
 type installPurgeCacheResponse struct {
+	InstallID string `json:"id"`
 	CacheType string `json:"type"`
 	IsPurged  bool   `json:"is_purged"`
 }
