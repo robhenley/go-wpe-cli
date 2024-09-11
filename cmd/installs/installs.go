@@ -2,6 +2,7 @@ package installs
 
 import (
 	"github.com/robhenley/go-wpe-cli/cmd/installs/backups"
+	"github.com/robhenley/go-wpe-cli/cmd/installs/cache"
 	"github.com/robhenley/go-wpe-cli/cmd/installs/domains"
 	"github.com/spf13/cobra"
 )
@@ -22,6 +23,7 @@ func init() {
 	InstallsCmd.AddCommand(installsCreateCmd)
 	InstallsCmd.AddCommand(installsUpdateCmd)
 	InstallsCmd.AddCommand(installsDeleteCmd)
+	InstallsCmd.AddCommand(cache.InstallsCacheCmd)
 	InstallsCmd.AddCommand(domains.DomainsCmd)
 	InstallsCmd.AddCommand(backups.BackupsCmd)
 }

@@ -84,6 +84,7 @@ func initConfig() {
 	baseURL := viper.GetString("base_url")
 	backupDescription := viper.GetString("backup_description")
 	backupEmails := viper.GetStringSlice("backup_emails")
+	cacheType := viper.GetString("cache_type")
 
 	data := fmt.Sprintf("%s:%s", username, password)
 	token := base64.StdEncoding.EncodeToString([]byte(data))
@@ -92,9 +93,8 @@ func initConfig() {
 		AuthToken:         token,
 		BackupDescription: backupDescription,
 		BackupEmails:      backupEmails,
+		CacheType:         cacheType,
 	}
-
-	// log.Fatalf("%v", config)
 
 	ctx := context.WithValue(context.Background(), types.ContextKeyCmdConfig, config)
 	rootCmd.SetContext(ctx)

@@ -12,4 +12,5 @@ type Config struct {
 	BackupDescription string
 	BackupEmails      []string
 	Limit             int
+	CacheType         string
 }
