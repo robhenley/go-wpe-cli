@@ -1,9 +1,11 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 )
 
 func (a *API) InstallDomainsList(installID string, page int) ([]domain, error) {
@@ -87,6 +89,17 @@ func (a *API) InstallsDomainsDelete(installID, domainID string) (objDeleted, err
 	}
 	defer res.Body.Close()
 
+	if res.StatusCode == http.StatusBadRequest {
+		er := errorResponse{}
+		err := json.NewDecoder(res.Body).Decode(&er)
+		if err != nil {
+			return od, err
+		}
+
+		fmt.Printf("%s", er)
+		os.Exit(1)
+	}
+
 	if res.StatusCode != http.StatusNoContent {
 		return od, fmt.Errorf("%s", res.Status)
 	}
@@ -94,4 +107,53 @@ func (a *API) InstallsDomainsDelete(installID, domainID string) (objDeleted, err
 	od.IsDeleted = true
 
 	return od, nil
+}
+
+// NOTE: For /installs/{install_id}/domains it returns redirectS_to not redirect_to
+func (a *API) InstallsDomainsCreate(installID, name, redirect string, primary bool) (domain, error) {
+	d := domain{}
+
+	idcr := installDomainCreateRequest{
+		Domain:     name,
+		Primary:    primary,
+		RedirectTo: redirect,
+	}
+
+	j, err := json.Marshal(idcr)
+	if err != nil {
+		return d, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/installs/%s/domains", a.Config.BaseURL, installID), bytes.NewReader(j))
+	if err != nil {
+		return d, err
+	}
+	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return d, err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode == http.StatusBadRequest {
+		er := errorResponse{}
+		err := json.NewDecoder(res.Body).Decode(&er)
+		if err != nil {
+			return d, err
+		}
+
+		return d, er
+	}
+
+	if res.StatusCode != http.StatusCreated {
+		return d, fmt.Errorf("%s", res.Status)
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&d)
+	if err != nil {
+		return d, err
+	}
+
+	return d, nil
 }

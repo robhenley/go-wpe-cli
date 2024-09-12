@@ -70,6 +70,12 @@ type installCreateRequest struct {
 	Environment string `json:"environment"`
 }
 
+type installDomainCreateRequest struct {
+	Domain     string `json:"name"`
+	Primary    bool   `json:"primary"`
+	RedirectTo string `json:"redirect_to,omitempty"`
+}
+
 type installPurgeCacheRequest struct {
 	CacheType string `json:"type"`
 }
@@ -101,12 +107,14 @@ type redirect struct {
 	Name string `json:"name"`
 }
 
+// TODO: Find a better way to deal with redirect & redirects
 type domain struct {
-	Name       string   `json:"name"`
-	Duplicate  bool     `json:"duplicate"`
-	Primary    bool     `json:"primary"`
-	ID         string   `json:"id"`
-	RedirectTo redirect `json:"redirect_to"`
+	Name        string   `json:"name"`
+	Duplicate   bool     `json:"duplicate"`
+	Primary     bool     `json:"primary"`
+	ID          string   `json:"id"`
+	RedirectTo  redirect `json:"redirect_to"`
+	RedirectsTo redirect `json:"redirects_to"`
 }
 
 type installDomainsListResponse struct {
@@ -160,18 +168,18 @@ type currentUser struct {
 	Phone     string `json:"phone_number"`
 }
 
-// type apiError struct {
-// 	Resource string `json:"resource"`
-// 	Field    string `json:"field"`
-// 	Type     string `json:"type"`
-// 	Code     string `json:"code"`
-// 	Message  string `json:"message"`
-// }
-// type errorResponse struct {
-// 	Message          string     `json:"message"`
-// 	DocumentationURL string     `json:"documentation_url"`
-// 	Errors           []apiError `json:"errors"`
-// }
+type apiError struct {
+	Resource string `json:"resource"`
+	Field    string `json:"field"`
+	Type     string `json:"type"`
+	Code     string `json:"code"`
+	Message  string `json:"message"`
+}
+type errorResponse struct {
+	Message          string     `json:"message"`
+	DocumentationURL string     `json:"documentation_url"`
+	Errors           []apiError `json:"errors"`
+}
 
 type objDeleted struct {
 	ID        string `json:"id"`
