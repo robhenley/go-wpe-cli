@@ -47,9 +47,7 @@ func sitesDelete(cmd *cobra.Command, args []string) {
 		if strings.ToLower(format) == "json" {
 
 			j, err := json.Marshal(out)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "%v\n", err)
-			}
+			cobra.CheckErr(err)
 
 			fmt.Fprintf(os.Stdout, "%s\n", j)
 			return

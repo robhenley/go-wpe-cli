@@ -28,29 +28,21 @@ func sitesList(cmd *cobra.Command, args []string) {
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
 
 	limit, err := cmd.Flags().GetInt("limit")
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
-	}
+	cobra.CheckErr(err)
 
 	config.Limit = limit
 
 	api := api.NewAPI(config)
 
 	page, err := cmd.Flags().GetInt("page")
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
-	}
+	cobra.CheckErr(err)
 
 	response := api.SitesList(page)
 
 	format := cmd.Flag("format").Value.String()
 	if strings.ToLower(format) == "json" {
 		j, err := json.Marshal(response)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "%v\n", err)
-		}
+		cobra.CheckErr(err)
 
 		fmt.Fprintf(os.Stdout, "%s\n", j)
 		return

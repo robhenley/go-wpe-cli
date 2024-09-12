@@ -30,11 +30,9 @@ func installsDomainsCdnStatus(cmd *cobra.Command, args []string) {
 	api := api.NewAPI(config)
 
 	res, err := api.InstallDomainCDNStatus(installID, domainID)
-	if err != nil {
-		cmd.PrintErrln(err)
-		return
-	}
+	cobra.CheckErr(err)
 
+	// TODO: Review this
 	cmd.Println(res)
 
 	fmt.Fprintf(os.Stdout, "%s, %s", installID, domainID)

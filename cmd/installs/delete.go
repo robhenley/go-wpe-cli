@@ -45,23 +45,14 @@ func installsDelete(cmd *cobra.Command, args []string) {
 	api := api.NewAPI(config)
 
 	result, err := api.InstallsDelete(installID)
-	if err != nil {
-		cmd.PrintErrf("Error: %s", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	format, err := cmd.Flags().GetString("format")
-	if err != nil {
-		cmd.PrintErrf("Error: %s", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	if strings.ToLower(format) == "json" {
 		j, err := json.Marshal(result)
-		if err != nil {
-			cmd.PrintErrf("Error: %s", err.Error())
-			return
-		}
+		cobra.CheckErr(err)
 
 		fmt.Fprintf(os.Stdout, "%s", j)
 		return

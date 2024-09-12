@@ -34,37 +34,22 @@ func sshKeysGet(cmd *cobra.Command, args []string) {
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
 
 	page, err := cmd.Flags().GetInt("page")
-	if err != nil {
-		cmd.PrintErrf("Error: %s\n", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	limit, err := cmd.Flags().GetInt("page")
-	if err != nil {
-		cmd.PrintErrf("Error: %s\n", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 	config.Limit = limit
 
 	format, err := cmd.Flags().GetString("format")
-	if err != nil {
-		cmd.PrintErrf("Error: %s\n", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	api := api.NewAPI(config)
 	keys, err := api.SSHKeysList(page)
-	if err != nil {
-		cmd.PrintErrf("Error: %s", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	if strings.ToLower(format) == "json" {
 		j, err := json.Marshal(keys)
-		if err != nil {
-			cmd.PrintErrf("Error: %s\n", err.Error())
-			return
-		}
+		cobra.CheckErr(err)
 
 		fmt.Fprintf(os.Stdout, "%s\n", j)
 		return

@@ -29,26 +29,17 @@ func accountsUsersDelete(cmd *cobra.Command, args []string) {
 	userID := args[1]
 
 	format, err := cmd.Flags().GetString("format")
-	if err != nil {
-		cmd.PrintErrf("Error: %s\n", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
 	api := api.NewAPI(config)
 
 	result, err := api.AccountsUsersDelete(accountID, userID)
-	if err != nil {
-		cmd.PrintErrf("Error: %s\n", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	if strings.ToLower(format) == "json" {
 		j, err := json.Marshal(result)
-		if err != nil {
-			cmd.PrintErrf("Error: %s\n", err.Error())
-			return
-		}
+		cobra.CheckErr(err)
 
 		fmt.Fprintf(os.Stdout, "%s\n", j)
 		return
