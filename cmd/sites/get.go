@@ -35,9 +35,7 @@ func sitesGet(cmd *cobra.Command, args []string) {
 	format := cmd.Flag("format").Value.String()
 	if strings.ToLower(format) == "json" {
 		j, err := json.Marshal(site)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "%v\n", err)
-		}
+		cobra.CheckErr(err)
 
 		fmt.Fprintf(os.Stdout, "%s\n", j)
 		return

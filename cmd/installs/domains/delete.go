@@ -30,26 +30,17 @@ func installsDomainsDelete(cmd *cobra.Command, args []string) {
 	domainID := args[1]
 
 	format, err := cmd.Flags().GetString("format")
-	if err != nil {
-		cmd.PrintErrf("Error: %s", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
 	api := api.NewAPI(config)
 
 	result, err := api.InstallsDomainsDelete(installID, domainID)
-	if err != nil {
-		cmd.PrintErrf("Error: %s", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	if strings.ToLower(format) == "json" {
 		j, err := json.Marshal(result)
-		if err != nil {
-			cmd.PrintErrf("Error: %s", err.Error())
-			return
-		}
+		cobra.CheckErr(err)
 
 		fmt.Fprintf(os.Stdout, "%s\n", j)
 		return

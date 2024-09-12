@@ -33,34 +33,24 @@ func installsDomainsList(cmd *cobra.Command, args []string) {
 	installID := args[0]
 
 	page, err := cmd.Flags().GetInt("page")
-	if err != nil {
-		cmd.PrintErrf("Error: %s", err.Error())
-	}
+	cobra.CheckErr(err)
 
 	limit, err := cmd.Flags().GetInt("limit")
-	if err != nil {
-		cmd.PrintErrf("Error: %s", err.Error())
-	}
+	cobra.CheckErr(err)
 
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
 	config.Limit = limit
 
 	api := api.NewAPI(config)
 	domains, err := api.InstallDomainsList(installID, page)
-	if err != nil {
-		cmd.PrintErrf("Error: %s\n", err.Error())
-	}
+	cobra.CheckErr(err)
 
 	format, err := cmd.Flags().GetString("format")
-	if err != nil {
-		cmd.PrintErrf("Error: %s", err.Error())
-	}
+	cobra.CheckErr(err)
 
 	if strings.ToLower(format) == "json" {
 		j, err := json.Marshal(domains)
-		if err != nil {
-			cmd.PrintErrf("Error: %s", err.Error())
-		}
+		cobra.CheckErr(err)
 
 		fmt.Fprintf(os.Stdout, "%s", j)
 		return

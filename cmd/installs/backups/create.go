@@ -51,10 +51,7 @@ func installsBackupsCreate(cmd *cobra.Command, args []string) {
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
 
 	emails, err := cmd.Flags().GetStringSlice("emails")
-	if err != nil {
-		cmd.PrintErrf("Error: %s", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	if len(emails) == 0 {
 		if len(config.BackupEmails) == 0 {
@@ -65,10 +62,7 @@ func installsBackupsCreate(cmd *cobra.Command, args []string) {
 	}
 
 	description, err := cmd.Flags().GetString("description")
-	if err != nil {
-		cmd.PrintErrf("Error: %s", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	if len(description) == 0 {
 		if len(config.BackupDescription) == 0 {
@@ -80,24 +74,15 @@ func installsBackupsCreate(cmd *cobra.Command, args []string) {
 	}
 
 	format, err := cmd.Flags().GetString("format")
-	if err != nil {
-		cmd.PrintErrf("Error: %s", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	api := api.NewAPI(config)
 	backup, err := api.InstallsBackupsCreate(installID, description, emails)
-	if err != nil {
-		cmd.PrintErrf("Error: %s\n", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	if strings.ToLower(format) == "json" {
 		j, err := json.Marshal(backup)
-		if err != nil {
-			cmd.PrintErrf("Error: %s\n", err.Error())
-			return
-		}
+		cobra.CheckErr(err)
 
 		fmt.Fprintf(os.Stdout, "%s\n", j)
 		return

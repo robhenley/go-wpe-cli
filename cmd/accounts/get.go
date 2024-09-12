@@ -26,27 +26,19 @@ func accountsGet(cmd *cobra.Command, args []string) {
 	}
 
 	format, err := cmd.Flags().GetString("format")
-	if err != nil {
-		cmd.PrintErrf("Error: %s\n", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
 
 	accountID := args[0]
 	api := api.NewAPI(config)
+
 	account, err := api.AccountsGet(accountID)
-	if err != nil {
-		cmd.PrintErrf("Error: %s\n", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	if strings.ToLower(format) == "json" {
 		j, err := json.Marshal(account)
-		if err != nil {
-			cmd.PrintErrf("Error: %s\n", err.Error())
-			return
-		}
+		cobra.CheckErr(err)
 
 		fmt.Fprintf(os.Stdout, "%s\n", j)
 		return

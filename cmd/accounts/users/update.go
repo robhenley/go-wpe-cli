@@ -33,40 +33,25 @@ func accountsUsersUpdate(cmd *cobra.Command, args []string) {
 	accountID := args[0]
 
 	page, err := cmd.Flags().GetInt("page")
-	if err != nil {
-		cmd.PrintErrf("Error: %s\n", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	limit, err := cmd.Flags().GetInt("limit")
-	if err != nil {
-		cmd.PrintErrf("Error: %s\n", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	format, err := cmd.Flags().GetString("format")
-	if err != nil {
-		cmd.PrintErrf("Error: %s\n", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
 	config.Limit = limit
 
 	api := api.NewAPI(config)
 	users, err := api.AccountsUsersList(accountID, page)
-	if err != nil {
-		cmd.PrintErrf("Error: %s\n", err.Error())
-		return
-	}
+	cobra.CheckErr(err)
 
 	if len(users) > 0 {
 		if strings.ToLower(format) == "json" {
 			j, err := json.Marshal(users)
-			if err != nil {
-				cmd.PrintErrf("Error: %s\n", err.Error())
-				return
-			}
+			cobra.CheckErr(err)
 
 			fmt.Fprintf(os.Stdout, "%s\n", j)
 			return
