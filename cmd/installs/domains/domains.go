@@ -21,6 +21,7 @@ to quickly create a Cobra application.`,
 
 func init() {
 	DomainsCmd.AddCommand(installsDomainsGetCmd)
+	DomainsCmd.AddCommand(installsDomainsDeleteCmd)
 	DomainsCmd.AddCommand(installsDomainsListCmd)
 	DomainsCmd.AddCommand(installsDomainsCdnStatusCmd)
 }

@@ -94,7 +94,7 @@ A placeholder for build instructions...
 - [ ] POST   /installs/{install_id}/domains/bulk
 - [X] GET    /installs/{install_id}/domains/{domain_id}
 - [ ] PATCH  /installs/{install_id}/domains/{domain_id}
-- [ ] DELETE /installs/{install_id}/domains/{domain_id}
+- [X] DELETE /installs/{install_id}/domains/{domain_id}
 - [ ] POST   /installs/{install_id}/domains/{domain_id}/check_status
 - [X] POST   /installs/{install_id}/backups
 - [X] GET    /installs/{install_id}/backups/{backup_id}

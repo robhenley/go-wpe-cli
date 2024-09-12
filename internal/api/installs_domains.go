@@ -68,3 +68,30 @@ func (a *API) InstallsDomainsGet(installID, domainID string) (domain, error) {
 
 	return d, nil
 }
+
+func (a *API) InstallsDomainsDelete(installID, domainID string) (objDeleted, error) {
+	od := objDeleted{
+		ID:        domainID,
+		IsDeleted: false,
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, fmt.Sprintf("%s/installs/%s/domains/%s", a.Config.BaseURL, installID, domainID), nil)
+	if err != nil {
+		return od, err
+	}
+	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return od, err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusNoContent {
+		return od, fmt.Errorf("%s", res.Status)
+	}
+
+	od.IsDeleted = true
+
+	return od, nil
+}
