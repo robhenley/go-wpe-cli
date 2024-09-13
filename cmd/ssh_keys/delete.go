@@ -13,27 +13,27 @@ import (
 
 // SSHKeysDeleteCmd represents the delete command
 var SSHKeysDeleteCmd = &cobra.Command{
-	Use:   "delete <key id>",
+	Use:   "delete",
 	Short: "Delete an existing SSH key",
 	Long:  `This will delete the SSH key.`,
 	Run:   sshKeysDelete,
 }
 
+func init() {
+	SSHKeysDeleteCmd.Flags().StringP("key", "k", "", "The key ID to delete")
+	SSHKeysDeleteCmd.MarkFlagRequired("key")
+}
+
 func sshKeysDelete(cmd *cobra.Command, args []string) {
-
-	if len(args) != 1 {
-		fmt.Println("Error: Please provide the key ID")
-		cmd.Usage()
-		return
-	}
-
-	keyID := args[0]
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
+	api := api.NewAPI(config)
+
+	keyID, err := cmd.Flags().GetString("key")
+	cobra.CheckErr(err)
 
 	format, err := cmd.Flags().GetString("format")
 	cobra.CheckErr(err)
 
-	api := api.NewAPI(config)
 	objDeleted, err := api.SSHKeyDelete(keyID)
 	cobra.CheckErr(err)
 

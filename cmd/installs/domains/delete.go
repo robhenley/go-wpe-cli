@@ -13,27 +13,24 @@ import (
 
 // installsDomainsDeleteCmd represents the installsDomainsDelete command
 var installsDomainsDeleteCmd = &cobra.Command{
-	Use:   "delete <install id> <domain id>",
+	Use:   "delete",
 	Short: "Delete a specific domain for a given install",
 	Long:  `Delete a specific domain for a given install`,
 	Run:   installsDomainsDelete,
 }
 
 func installsDomainsDelete(cmd *cobra.Command, args []string) {
-	if len(args) != 2 {
-		cmd.PrintErr("Error: Please provide an install ID and the domain ID\n")
-		cmd.Usage()
-		return
-	}
+	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
+	api := api.NewAPI(config)
 
-	installID := args[0]
-	domainID := args[1]
+	installID, err := cmd.Flags().GetString("install")
+	cobra.CheckErr(err)
+
+	domainID, err := cmd.Flags().GetString("domain")
+	cobra.CheckErr(err)
 
 	format, err := cmd.Flags().GetString("format")
 	cobra.CheckErr(err)
-
-	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
-	api := api.NewAPI(config)
 
 	result, err := api.InstallsDomainsDelete(installID, domainID)
 	cobra.CheckErr(err)

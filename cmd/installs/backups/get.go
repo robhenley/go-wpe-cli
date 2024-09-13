@@ -13,27 +13,33 @@ import (
 
 // installsBackupsGetCmd represents the accounts command
 var installsBackupsGetCmd = &cobra.Command{
-	Use:   "get <install id> <backup id>",
+	Use:   "get",
 	Short: "Retrieves the status of a backup of a WordPress installation",
 	Long:  `Retrieves the status of a backup of a WordPress installation`,
 	Run:   installsBackupsGet,
 }
 
-func installsBackupsGet(cmd *cobra.Command, args []string) {
-	if len(args) != 2 {
-		cmd.Usage()
-		return
-	}
+func init() {
+	installsBackupsGetCmd.Flags().StringP("install", "i", "", "The install ID to get a backup from")
+	installsBackupsGetCmd.MarkFlagRequired("install")
 
-	installID := args[0]
-	backupID := args[1]
+	installsBackupsGetCmd.Flags().StringP("backup", "b", "", "The backup ID to get")
+	installsBackupsGetCmd.MarkFlagRequired("backup")
+}
+
+func installsBackupsGet(cmd *cobra.Command, args []string) {
+	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
+	api := api.NewAPI(config)
+
+	installID, err := cmd.Flags().GetString("install")
+	cobra.CheckErr(err)
+
+	backupID, err := cmd.Flags().GetString("backup")
+	cobra.CheckErr(err)
 
 	format, err := cmd.Flags().GetString("format")
 	cobra.CheckErr(err)
 
-	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
-
-	api := api.NewAPI(config)
 	backup, err := api.InstallsBackupsGet(installID, backupID)
 	cobra.CheckErr(err)
 

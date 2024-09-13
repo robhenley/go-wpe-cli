@@ -13,26 +13,29 @@ import (
 
 // getCmd represents the get command
 var getCmd = &cobra.Command{
-	Use:   "get <id>",
+	Use:   "get",
 	Short: "Get a site",
 	Long:  `Get a site by its site ID`,
 	Run:   sitesGet,
 }
 
+func init() {
+	getCmd.Flags().StringP("site", "s", "", "The ID of the site to get")
+	getCmd.MarkFlagRequired("site")
+}
+
 func sitesGet(cmd *cobra.Command, args []string) {
-	if len(args) != 1 {
-		fmt.Fprint(os.Stderr, "Error: Please provide a site id\n")
-		cmd.Usage()
-		return
-	}
-	id := args[0]
-
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
-
 	api := api.NewAPI(config)
-	site := api.SitesGet(id)
 
-	format := cmd.Flag("format").Value.String()
+	siteID, err := cmd.Flags().GetString("site")
+	cobra.CheckErr(err)
+
+	format, err := cmd.Flags().GetString("format")
+	cobra.CheckErr(err)
+
+	site := api.SitesGet(siteID)
+
 	if strings.ToLower(format) == "json" {
 		j, err := json.Marshal(site)
 		cobra.CheckErr(err)

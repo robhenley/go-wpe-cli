@@ -13,29 +13,44 @@ import (
 
 // installsCreateCmd represents the create command
 var installsCreateCmd = &cobra.Command{
-	Use:   "create <name> <account id> <site id> <environment>",
+	Use:   "create",
 	Short: "Create a new WordPress installation",
 	Long:  `Creates a new WordPress installation`,
 	Run:   installsCreate,
 }
 
-func installsCreate(cmd *cobra.Command, args []string) {
-	if len(args) != 4 {
-		cmd.Usage()
-		return
-	}
+func init() {
+	installsCreateCmd.Flags().StringP("name", "n", "", "The name of the install to create")
+	installsCreateCmd.MarkFlagRequired("name")
 
-	// TODO: Validation?
-	name := args[0]
-	accountID := args[1]
-	siteID := args[2]
-	environment := args[3]
+	installsCreateCmd.Flags().StringP("account", "a", "", "The account ID to create the install in")
+	installsCreateCmd.MarkFlagRequired("account")
+
+	installsCreateCmd.Flags().StringP("site", "s", "", "The site ID to create the install in")
+	installsCreateCmd.MarkFlagRequired("site")
+
+	installsCreateCmd.Flags().StringP("environment", "e", "", "The environment to create install in")
+	installsCreateCmd.MarkFlagRequired("environment")
+}
+
+func installsCreate(cmd *cobra.Command, args []string) {
+	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
+	api := api.NewAPI(config)
+
+	name, err := cmd.Flags().GetString("name")
+	cobra.CheckErr(err)
+
+	accountID, err := cmd.Flags().GetString("account")
+	cobra.CheckErr(err)
+
+	siteID, err := cmd.Flags().GetString("site")
+	cobra.CheckErr(err)
+
+	environment, err := cmd.Flags().GetString("environment")
+	cobra.CheckErr(err)
 
 	format, err := cmd.Flags().GetString("format")
 	cobra.CheckErr(err)
-
-	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
-	api := api.NewAPI(config)
 
 	install, err := api.InstallsCreate(name, accountID, siteID, environment)
 	cobra.CheckErr(err)

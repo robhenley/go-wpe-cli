@@ -13,29 +13,35 @@ import (
 
 // updateCmd represents the update command
 var updateCmd = &cobra.Command{
-	Use:   "update <site id> <site name>",
+	Use:   "update",
 	Short: "Update a site",
 	Long:  `Long.`,
 	Run:   sitesUpdate,
 }
 
+func initt() {
+	updateCmd.Flags().StringP("site", "s", "", "The ID of the site to update")
+	updateCmd.MarkFlagRequired("site")
+
+	updateCmd.Flags().StringP("name", "n", "", "The site name")
+	updateCmd.MarkFlagRequired("name")
+}
+
 func sitesUpdate(cmd *cobra.Command, args []string) {
-	if len(args) != 2 {
-		fmt.Fprint(os.Stderr, "Error: Please provide a site id and a site name\n")
-		cmd.Usage()
-		return
-	}
-
-	siteID := args[0]
-	siteName := args[1]
-
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
-
 	api := api.NewAPI(config)
+
+	siteID, err := cmd.Flags().GetString("site")
+	cobra.CheckErr(err)
+
+	siteName, err := cmd.Flags().GetString("name")
+	cobra.CheckErr(err)
+
+	format, err := cmd.Flags().GetString("format")
+	cobra.CheckErr(err)
 
 	site := api.SitesUpdate(siteID, siteName)
 
-	format := cmd.Flag("format").Value.String()
 	if strings.ToLower(format) == "json" {
 		j, err := json.Marshal(site)
 		cobra.CheckErr(err)

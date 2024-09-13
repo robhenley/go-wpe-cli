@@ -20,12 +20,6 @@ var currentUserGetCmd = &cobra.Command{
 }
 
 func currentUserGet(cmd *cobra.Command, args []string) {
-	if len(args) != 0 {
-		fmt.Println("Error: This command doesn't require arguments")
-		cmd.Usage()
-		return
-	}
-
 	format, err := cmd.Flags().GetString("format")
 	cobra.CheckErr(err)
 

@@ -13,22 +13,24 @@ import (
 
 // installsGetCmd represents the get command
 var installsGetCmd = &cobra.Command{
-	Use:   "get <install id>",
+	Use:   "get",
 	Short: "Get an install by ID",
 	Long:  `Returns a single Install`,
 	Run:   installsGet,
 }
 
-func installsGet(cmd *cobra.Command, args []string) {
-	if len(args) != 1 {
-		cmd.PrintErr("Error: Please provide an install ID")
-		cmd.Usage()
-		return
-	}
+func init() {
+	installsGetCmd.Flags().StringP("install", "i", "", "The install ID to get")
+	installsGetCmd.MarkFlagRequired("install")
+}
 
-	installID := args[0]
+func installsGet(cmd *cobra.Command, args []string) {
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
 	api := api.NewAPI(config)
+
+	installID, err := cmd.Flags().GetString("install")
+	cobra.CheckErr(err)
+
 	install, err := api.InstallsGet(installID)
 	cobra.CheckErr(err)
 

@@ -38,15 +38,15 @@ wpe sites create <account_id> "A new site"
 
 **Backup an install**
 ```bash
-wpe install list --ui | wpe install backup create -
+wpe install list --ui | wpe install backup create -i -
 ```
 
 ```bash
-wpe install list | fzf | grep -oE "^([a-zA-Z0-9-]+)" | wpe install backup create -
+wpe install list | fzf | grep -oE "^([a-zA-Z0-9-]+)" | wpe install backup create -i -
 ```
 
 ```bash
-wpe sites list | fzf --bind 'enter:become(echo {1})' | wpe install backup create -
+wpe sites list | fzf --bind 'enter:become(echo {1})' | wpe install backup create -i -
 ```
 
 **Purge an installs cache**

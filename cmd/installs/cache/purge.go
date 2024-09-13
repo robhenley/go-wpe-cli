@@ -14,7 +14,7 @@ import (
 
 // installsCachePurgeCmd
 var installsCachePurgeCmd = &cobra.Command{
-	Use:   "purge <install id> [cache type]",
+	Use:   "purge",
 	Short: "Purge an installs cache",
 	Long: `Purge an installs cache with supported cache types being "page",
 "object", or "cdn".  Defaults to "object" cache but the default can be set
@@ -22,19 +22,26 @@ with the config key cache_type.`,
 	Run: installsCachePurge,
 }
 
-func installsCachePurge(cmd *cobra.Command, args []string) {
-	if len(args) < 1 {
-		cmd.Usage()
-		return
-	}
+func init() {
+	installsCachePurgeCmd.Flags().StringP("install", "i", "", "The install ID to purge the cache from")
+	installsCachePurgeCmd.MarkFlagRequired("install")
 
+	installsCachePurgeCmd.Flags().StringP("cache-type", "t", "", "The cache type to purge (e.g. page, object, cdn)")
+}
+
+func installsCachePurge(cmd *cobra.Command, args []string) {
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
 	api := api.NewAPI(config)
 
-	installID := args[0]
+	installID, err := cmd.Flags().GetString("install")
+	cobra.CheckErr(err)
 
-	// Allow for explicit stdin
-	if args[0] == "-" {
+	cacheType, err := cmd.Flags().GetString("cache-type")
+	cobra.CheckErr(err)
+
+	cacheType = setCacheType(config, cacheType)
+
+	if installID == "-" {
 		scanner := bufio.NewScanner(os.Stdin)
 		for scanner.Scan() {
 			installID = scanner.Text()
@@ -46,13 +53,6 @@ func installsCachePurge(cmd *cobra.Command, args []string) {
 		}
 
 		installID = strings.Trim(installID, " ")
-	}
-
-	var cacheType string
-	if len(args) == 2 {
-		cacheType = args[1]
-	} else {
-		cacheType = setCacheType(config, cacheType)
 	}
 
 	result, err := api.InstallsCachePurge(installID, cacheType)

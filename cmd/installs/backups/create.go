@@ -14,27 +14,28 @@ import (
 
 // installsBackupsCreateCmd represents the accounts command
 var installsBackupsCreateCmd = &cobra.Command{
-	Use:   "create <install id>",
+	Use:   "create",
 	Short: "Request a new backup of a WordPress installation",
 	Long:  `Kicks off a backup of a WordPress installation`,
 	Run:   installsBackupsCreate,
 }
 
 func init() {
+	installsBackupsCreateCmd.Flags().StringP("install", "i", "", "The install ID to create a backup from")
+	installsBackupsCreateCmd.MarkFlagRequired("install")
+
 	installsBackupsCreateCmd.Flags().StringSlice("emails", []string{}, "A comma separated list of emails with no spaces Ex: 1@example.com,2@example.com")
 	installsBackupsCreateCmd.Flags().String("description", "", "A description of this backup")
 }
 
 func installsBackupsCreate(cmd *cobra.Command, args []string) {
-	if len(args) != 1 {
-		cmd.Usage()
-		return
-	}
+	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
+	api := api.NewAPI(config)
 
-	installID := args[0]
+	installID, err := cmd.Flags().GetString("install")
+	cobra.CheckErr(err)
 
-	// Allow for explicit stdin
-	if args[0] == "-" {
+	if installID == "-" {
 		scanner := bufio.NewScanner(os.Stdin)
 		for scanner.Scan() {
 			installID = scanner.Text()
@@ -47,8 +48,6 @@ func installsBackupsCreate(cmd *cobra.Command, args []string) {
 
 		installID = strings.Trim(installID, " ")
 	}
-
-	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
 
 	emails, err := cmd.Flags().GetStringSlice("emails")
 	cobra.CheckErr(err)
@@ -76,7 +75,6 @@ func installsBackupsCreate(cmd *cobra.Command, args []string) {
 	format, err := cmd.Flags().GetString("format")
 	cobra.CheckErr(err)
 
-	api := api.NewAPI(config)
 	backup, err := api.InstallsBackupsCreate(installID, description, emails)
 	cobra.CheckErr(err)
 

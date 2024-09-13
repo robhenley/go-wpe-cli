@@ -14,19 +14,24 @@ import (
 
 // installsDeleteCmd represents the delete command
 var installsDeleteCmd = &cobra.Command{
-	Use:   "delete <install id>",
+	Use:   "delete",
 	Short: "",
 	Long:  ``,
 	Run:   installsDelete,
 }
 
-func installsDelete(cmd *cobra.Command, args []string) {
-	if len(args) != 1 {
-		cmd.Usage()
-		return
-	}
+func init() {
+	installsDeleteCmd.Flags().StringP("install", "i", "", "The install ID to create a backup from")
+	installsDeleteCmd.MarkFlagRequired("install")
+}
 
-	installID := args[0]
+func installsDelete(cmd *cobra.Command, args []string) {
+	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
+	api := api.NewAPI(config)
+
+	installID, err := cmd.Flags().GetString("install")
+	cobra.CheckErr(err)
+
 	if installID == "-" {
 		scanner := bufio.NewScanner(os.Stdin)
 		for scanner.Scan() {
@@ -40,9 +45,6 @@ func installsDelete(cmd *cobra.Command, args []string) {
 
 		installID = strings.Trim(installID, " ")
 	}
-
-	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
-	api := api.NewAPI(config)
 
 	result, err := api.InstallsDelete(installID)
 	cobra.CheckErr(err)
