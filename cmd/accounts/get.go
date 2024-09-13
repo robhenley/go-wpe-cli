@@ -19,20 +19,22 @@ var accountsGetCmd = &cobra.Command{
 	Run:   accountsGet,
 }
 
+func init() {
+	accountsGetCmd.Flags().StringP("account", "a", "", "The account ID to get the user from")
+	accountsGetCmd.MarkFlagRequired("account")
+
+}
+
 func accountsGet(cmd *cobra.Command, args []string) {
-	if len(args) == 0 {
-		cmd.Usage()
-		return
-	}
+	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
+
+	accountID, err := cmd.Flags().GetString("account")
+	cobra.CheckErr(err)
 
 	format, err := cmd.Flags().GetString("format")
 	cobra.CheckErr(err)
 
-	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
-
-	accountID := args[0]
 	api := api.NewAPI(config)
-
 	account, err := api.AccountsGet(accountID)
 	cobra.CheckErr(err)
 

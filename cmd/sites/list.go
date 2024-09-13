@@ -26,20 +26,20 @@ func init() {
 
 func sitesList(cmd *cobra.Command, args []string) {
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
+	api := api.NewAPI(config)
 
 	limit, err := cmd.Flags().GetInt("limit")
 	cobra.CheckErr(err)
-
 	config.Limit = limit
 
-	api := api.NewAPI(config)
+	format, err := cmd.Flags().GetString("format")
+	cobra.CheckErr(err)
 
 	page, err := cmd.Flags().GetInt("page")
 	cobra.CheckErr(err)
 
 	response := api.SitesList(page)
 
-	format := cmd.Flag("format").Value.String()
 	if strings.ToLower(format) == "json" {
 		j, err := json.Marshal(response)
 		cobra.CheckErr(err)

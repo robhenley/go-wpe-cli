@@ -19,20 +19,26 @@ var accountsUsersDeleteCmd = &cobra.Command{
 	Run:   accountsUsersDelete,
 }
 
-func accountsUsersDelete(cmd *cobra.Command, args []string) {
-	if len(args) != 2 {
-		cmd.Usage()
-		return
-	}
+func init() {
+	accountsUsersDeleteCmd.Flags().StringP("account", "a", "", "The account ID to delete the user from")
+	accountsUsersDeleteCmd.MarkFlagRequired("account")
 
-	accountID := args[0]
-	userID := args[1]
+	accountsUsersDeleteCmd.Flags().StringP("user", "u", "", "The User ID to delete from the account")
+	accountsUsersDeleteCmd.MarkFlagRequired("user")
+}
+
+func accountsUsersDelete(cmd *cobra.Command, args []string) {
+	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
+	api := api.NewAPI(config)
+
+	accountID, err := cmd.Flags().GetString("account")
+	cobra.CheckErr(err)
+
+	userID, err := cmd.Flags().GetString("user")
+	cobra.CheckErr(err)
 
 	format, err := cmd.Flags().GetString("format")
 	cobra.CheckErr(err)
-
-	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
-	api := api.NewAPI(config)
 
 	result, err := api.AccountsUsersDelete(accountID, userID)
 	cobra.CheckErr(err)

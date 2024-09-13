@@ -17,17 +17,23 @@ var installsDomainsCdnStatusCmd = &cobra.Command{
 	Run:   installsDomainsCdnStatus,
 }
 
+func init() {
+	installsDomainsCdnStatusCmd.Flags().StringP("install", "i", "", "The install ID to create a backup from")
+	installsDomainsCdnStatusCmd.MarkFlagRequired("install")
+
+	installsDomainsCdnStatusCmd.Flags().StringP("domain", "d", "", "The domain ID to check the status of")
+	installsDomainsCdnStatusCmd.MarkFlagRequired("domain")
+}
+
 func installsDomainsCdnStatus(cmd *cobra.Command, args []string) {
-	if len(args) != 2 {
-		cmd.Usage()
-		return
-	}
-
-	installID := args[0]
-	domainID := args[1]
-
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
 	api := api.NewAPI(config)
+
+	installID, err := cmd.Flags().GetString("install")
+	cobra.CheckErr(err)
+
+	domainID, err := cmd.Flags().GetString("domain")
+	cobra.CheckErr(err)
 
 	res, err := api.InstallDomainCDNStatus(installID, domainID)
 	cobra.CheckErr(err)

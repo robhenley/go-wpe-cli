@@ -13,30 +13,35 @@ import (
 
 // createCmd represents the create command
 var createCmd = &cobra.Command{
-	Use:   "create <account id> <name>",
+	Use:   "create",
 	Short: "Create a new site",
 	Long:  `Create a new site`,
 	Run:   sitesCreate,
 }
 
+func init() {
+	createCmd.Flags().StringP("account", "a", "", "The account ID to create the site under")
+	createCmd.MarkFlagRequired("account")
+
+	createCmd.Flags().StringP("name", "n", "", "The name of the site")
+	createCmd.MarkFlagRequired("name")
+}
+
 func sitesCreate(cmd *cobra.Command, args []string) {
-
-	if len(args) != 2 {
-		fmt.Fprint(os.Stderr, "Error: Please provide an account id and a name\n")
-		cmd.Usage()
-		return
-	}
-
-	accountID := args[0]
-	name := args[1]
-
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
-
 	api := api.NewAPI(config)
+
+	accountID, err := cmd.Flags().GetString("account")
+	cobra.CheckErr(err)
+
+	name, err := cmd.Flags().GetString("name")
+	cobra.CheckErr(err)
+
+	format, err := cmd.Flags().GetString("format")
+	cobra.CheckErr(err)
 
 	site := api.SitesCreate(accountID, name)
 
-	format := cmd.Flag("format").Value.String()
 	if strings.ToLower(format) == "json" {
 		j, err := json.Marshal(site)
 		cobra.CheckErr(err)

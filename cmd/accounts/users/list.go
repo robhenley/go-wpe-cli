@@ -20,31 +20,30 @@ var accountsUsersListCmd = &cobra.Command{
 }
 
 func init() {
+	accountsUsersListCmd.Flags().StringP("account", "a", "", "The account ID to list the users from")
+	accountsUsersListCmd.MarkFlagRequired("account")
+
 	accountsUsersListCmd.Flags().Int("page", 1, "The page to return")
 	accountsUsersListCmd.Flags().Int("limit", 100, "Limit the number of results")
 }
 
 func accountsUsersList(cmd *cobra.Command, args []string) {
-	if len(args) != 1 {
-		cmd.Usage()
-		return
-	}
+	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
+	api := api.NewAPI(config)
 
-	accountID := args[0]
+	accountID, err := cmd.Flags().GetString("account")
+	cobra.CheckErr(err)
 
 	page, err := cmd.Flags().GetInt("page")
 	cobra.CheckErr(err)
 
 	limit, err := cmd.Flags().GetInt("limit")
 	cobra.CheckErr(err)
+	config.Limit = limit
 
 	format, err := cmd.Flags().GetString("format")
 	cobra.CheckErr(err)
 
-	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
-	config.Limit = limit
-
-	api := api.NewAPI(config)
 	users, err := api.AccountsUsersList(accountID, page)
 	cobra.CheckErr(err)
 

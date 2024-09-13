@@ -21,18 +21,18 @@ var installsListCmd = &cobra.Command{
 }
 
 func init() {
+	installsListCmd.Flags().StringP("account", "a", "", "The account ID to list installs from")
 	installsListCmd.Flags().Int("page", 1, "The page to return")
 	installsListCmd.Flags().Int("limit", 100, "Limit the number of results")
 	installsListCmd.Flags().Bool("ui", false, "Enable the fuzzy finder (fzf) UI")
 }
 
 func installsList(cmd *cobra.Command, args []string) {
-	var accountID string
-	if len(args) == 1 {
-		accountID = args[0]
-	}
-
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
+	api := api.NewAPI(config)
+
+	accountID, err := cmd.Flags().GetString("account")
+	cobra.CheckErr(err)
 
 	page, err := cmd.Flags().GetInt("page")
 	cobra.CheckErr(err)
@@ -44,7 +44,6 @@ func installsList(cmd *cobra.Command, args []string) {
 	enableUI, err := cmd.Flags().GetBool("ui")
 	cobra.CheckErr(err)
 
-	api := api.NewAPI(config)
 	installs, err := api.InstallsList(page, accountID)
 	cobra.CheckErr(err)
 

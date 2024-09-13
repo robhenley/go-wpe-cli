@@ -13,27 +13,32 @@ import (
 
 // installsDomainsGetCmd represents the installsDomainsGet command
 var installsDomainsGetCmd = &cobra.Command{
-	Use:   "get <install id> <domain id>",
+	Use:   "get",
 	Short: "Get a specific domain for a given install",
 	Long:  `Returns a specific domain for a given install`,
 	Run:   installsDomainsGet,
 }
 
-func installsDomainsGet(cmd *cobra.Command, args []string) {
-	if len(args) != 2 {
-		fmt.Println("Error: Please provide an install ID and the domain ID")
-		cmd.Usage()
-		return
-	}
+func init() {
+	installsDomainsGetCmd.Flags().StringP("install", "i", "", "The install ID to create a backup from")
+	installsDomainsGetCmd.MarkFlagRequired("install")
 
-	installID := args[0]
-	domainID := args[1]
+	installsDomainsGetCmd.Flags().StringP("domain", "d", "", "The domain ID to check the status of")
+	installsDomainsGetCmd.MarkFlagRequired("domain")
+}
+
+func installsDomainsGet(cmd *cobra.Command, args []string) {
+	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
+	api := api.NewAPI(config)
+
+	installID, err := cmd.Flags().GetString("install")
+	cobra.CheckErr(err)
+
+	domainID, err := cmd.Flags().GetString("domain")
+	cobra.CheckErr(err)
 
 	format, err := cmd.Flags().GetString("format")
 	cobra.CheckErr(err)
-
-	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
-	api := api.NewAPI(config)
 
 	domain, err := api.InstallsDomainsGet(installID, domainID)
 	cobra.CheckErr(err)

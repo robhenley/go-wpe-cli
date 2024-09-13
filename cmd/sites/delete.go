@@ -13,25 +13,27 @@ import (
 
 // deleteCmd represents the delete command
 var deleteCmd = &cobra.Command{
-	Use:   "delete <site id>",
+	Use:   "delete",
 	Short: "Delete a site",
 	Long: ` This will delete the site and any installs associated with this site. 
 	This delete is permanent and there is no confirmation prompt`,
 	Run: sitesDelete,
 }
 
+func init() {
+	deleteCmd.Flags().StringP("site", "s", "", "The ID of the site to delete")
+	deleteCmd.MarkFlagRequired("site")
+}
+
 func sitesDelete(cmd *cobra.Command, args []string) {
-	if len(args) != 1 {
-		fmt.Fprint(os.Stderr, "Error: Please provide a site id\n")
-		cmd.Usage()
-		return
-	}
-
-	siteID := args[0]
-
-	format := cmd.Flag("format").Value.String()
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
 	api := api.NewAPI(config)
+
+	siteID, err := cmd.Flags().GetString("site")
+	cobra.CheckErr(err)
+
+	format, err := cmd.Flags().GetString("format")
+	cobra.CheckErr(err)
 
 	isDeleted := api.SitesDelete(siteID)
 

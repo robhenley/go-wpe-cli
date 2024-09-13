@@ -25,13 +25,8 @@ func init() {
 }
 
 func sshKeysCreate(cmd *cobra.Command, args []string) {
-	if len(args) != 0 {
-		fmt.Println("Error: This command doesn't require arguments")
-		cmd.Usage()
-		return
-	}
-
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
+	api := api.NewAPI(config)
 
 	keyFile, err := cmd.Flags().GetString("key")
 	cobra.CheckErr(err)
@@ -42,7 +37,6 @@ func sshKeysCreate(cmd *cobra.Command, args []string) {
 	format, err := cmd.Flags().GetString("format")
 	cobra.CheckErr(err)
 
-	api := api.NewAPI(config)
 	key, err := api.SSHKeysCreate(string(keyContents))
 	cobra.CheckErr(err)
 
