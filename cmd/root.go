@@ -26,14 +26,6 @@ var cfgFile string
 var rootCmd = &cobra.Command{
 	Use:   "wpe",
 	Short: "Unofficial WP Engine CLI",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Without this the config doesn't get set
-	// Run: func(cmd *cobra.Command, args []string) {},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -52,6 +44,7 @@ func init() {
 	rootCmd.PersistentFlags().String("format", "human-readable", "Use this output format. Can be 'human-readable' or 'json'")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
+	rootCmd.AddCommand(versionCmd)
 	rootCmd.AddCommand(statusCmd)
 	rootCmd.AddCommand(sites.SitesCmd)
 	rootCmd.AddCommand(installs.InstallsCmd)

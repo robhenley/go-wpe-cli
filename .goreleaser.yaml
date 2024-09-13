@@ -21,6 +21,10 @@ builds:
       - linux
       - windows
       - darwin
+    ldflags:
+      - '-s -w -X github.com/robhenley/go-wpe-cli/cmd.version={{.Version}}'
+      - ' -X github.com/robhenley/go-wpe-cli/cmd.commit={{.Commit}} '
+      - ' -X github.com/robhenley/go-wpe-cli/cmd.date={{.Date}} '
 
 archives:
   - format: tar.gz
