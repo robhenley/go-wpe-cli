@@ -13,7 +13,7 @@ import (
 
 // SSHKeysDeleteCmd represents the delete command
 var SSHKeysDeleteCmd = &cobra.Command{
-	Use:   "delete <key id>",
+	Use:   "delete",
 	Short: "Delete an existing SSH key",
 	Long:  `This will delete the SSH key.`,
 	Run:   sshKeysDelete,

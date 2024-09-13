@@ -14,7 +14,7 @@ import (
 
 // installsBackupsCreateCmd represents the accounts command
 var installsBackupsCreateCmd = &cobra.Command{
-	Use:   "create <install id>",
+	Use:   "create",
 	Short: "Request a new backup of a WordPress installation",
 	Long:  `Kicks off a backup of a WordPress installation`,
 	Run:   installsBackupsCreate,

@@ -13,7 +13,7 @@ import (
 
 // updateCmd represents the update command
 var updateCmd = &cobra.Command{
-	Use:   "update <site id> <site name>",
+	Use:   "update",
 	Short: "Update a site",
 	Long:  `Long.`,
 	Run:   sitesUpdate,

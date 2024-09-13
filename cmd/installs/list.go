@@ -14,7 +14,7 @@ import (
 
 // installsListCmd represents the list command
 var installsListCmd = &cobra.Command{
-	Use:   "list [account id]",
+	Use:   "list",
 	Short: "List your WordPress installations",
 	Long:  `List your WordPress installations`,
 	Run:   installsList,

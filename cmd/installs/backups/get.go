@@ -13,7 +13,7 @@ import (
 
 // installsBackupsGetCmd represents the accounts command
 var installsBackupsGetCmd = &cobra.Command{
-	Use:   "get <install id> <backup id>",
+	Use:   "get",
 	Short: "Retrieves the status of a backup of a WordPress installation",
 	Long:  `Retrieves the status of a backup of a WordPress installation`,
 	Run:   installsBackupsGet,

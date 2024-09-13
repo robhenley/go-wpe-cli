@@ -13,7 +13,7 @@ import (
 
 // getCmd represents the get command
 var getCmd = &cobra.Command{
-	Use:   "get <id>",
+	Use:   "get",
 	Short: "Get a site",
 	Long:  `Get a site by its site ID`,
 	Run:   sitesGet,

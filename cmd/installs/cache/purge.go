@@ -14,7 +14,7 @@ import (
 
 // installsCachePurgeCmd
 var installsCachePurgeCmd = &cobra.Command{
-	Use:   "purge <install id> [cache type]",
+	Use:   "purge",
 	Short: "Purge an installs cache",
 	Long: `Purge an installs cache with supported cache types being "page",
 "object", or "cdn".  Defaults to "object" cache but the default can be set

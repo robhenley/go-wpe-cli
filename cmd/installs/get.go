@@ -13,7 +13,7 @@ import (
 
 // installsGetCmd represents the get command
 var installsGetCmd = &cobra.Command{
-	Use:   "get <install id>",
+	Use:   "get",
 	Short: "Get an install by ID",
 	Long:  `Returns a single Install`,
 	Run:   installsGet,
