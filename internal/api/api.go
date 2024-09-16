@@ -60,14 +60,14 @@ func (e errorResponse) Error() string {
 	return text
 }
 
-func (a *API) checkBadRequest(res *http.Response) error {
-	if res.StatusCode == http.StatusBadRequest {
+func (a *API) checkErrorResponse(res *http.Response) error {
+	switch res.StatusCode {
+	case http.StatusBadRequest, http.StatusInternalServerError, http.StatusUnauthorized:
 		er := errorResponse{}
 		err := json.NewDecoder(res.Body).Decode(&er)
 		if err != nil {
 			return err
 		}
-
 		return er
 	}
 
