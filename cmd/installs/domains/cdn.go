@@ -11,7 +11,7 @@ import (
 
 // installsDomainsCdnStatusCmd represents the cdn command
 var installsDomainsCdnStatusCmd = &cobra.Command{
-	Use:   "cdn",
+	Use:   "cdn-status",
 	Short: "Check the status of a domain",
 	Long:  `Submits a request to check the status of the domain`,
 	Run:   installsDomainsCdnStatus,
