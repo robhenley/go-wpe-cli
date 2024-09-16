@@ -59,3 +59,17 @@ func (e errorResponse) Error() string {
 
 	return text
 }
+
+func (a *API) checkBadRequest(res *http.Response) error {
+	if res.StatusCode == http.StatusBadRequest {
+		er := errorResponse{}
+		err := json.NewDecoder(res.Body).Decode(&er)
+		if err != nil {
+			return err
+		}
+
+		return er
+	}
+
+	return nil
+}
