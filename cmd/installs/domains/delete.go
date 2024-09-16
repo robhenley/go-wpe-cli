@@ -19,6 +19,14 @@ var installsDomainsDeleteCmd = &cobra.Command{
 	Run:   installsDomainsDelete,
 }
 
+func init() {
+	installsDomainsDeleteCmd.Flags().StringP("install", "i", "", "The install ID to delete the domain from")
+	installsDomainsDeleteCmd.MarkFlagRequired("install")
+
+	installsDomainsDeleteCmd.Flags().StringP("domain", "d", "", "The domain ID of the domain to be deleted")
+	installsDomainsDeleteCmd.MarkFlagRequired("domain")
+}
+
 func installsDomainsDelete(cmd *cobra.Command, args []string) {
 	config := cmd.Root().Context().Value(types.ContextKeyCmdConfig).(types.Config)
 	api := api.NewAPI(config)

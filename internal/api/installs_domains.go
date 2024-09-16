@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 )
 
 func (a *API) InstallDomainsList(installID string, page int) ([]domain, error) {
@@ -89,15 +88,9 @@ func (a *API) InstallsDomainsDelete(installID, domainID string) (objDeleted, err
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode == http.StatusBadRequest {
-		er := errorResponse{}
-		err := json.NewDecoder(res.Body).Decode(&er)
-		if err != nil {
-			return od, err
-		}
-
-		fmt.Printf("%s", er)
-		os.Exit(1)
+	err = a.checkBadRequest(res)
+	if err != nil {
+		return od, err
 	}
 
 	if res.StatusCode != http.StatusNoContent {
