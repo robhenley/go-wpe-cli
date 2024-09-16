@@ -88,7 +88,7 @@ func (a *API) InstallsDomainsDelete(installID, domainID string) (objDeleted, err
 	}
 	defer res.Body.Close()
 
-	err = a.checkBadRequest(res)
+	err = a.checkErrorResponse(res)
 	if err != nil {
 		return od, err
 	}
