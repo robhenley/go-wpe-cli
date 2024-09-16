@@ -185,3 +185,8 @@ type objDeleted struct {
 	ID        string `json:"id"`
 	IsDeleted bool   `json:"is_deleted"`
 }
+
+type objAccepted struct {
+	ID         string `json:"id"`
+	IsAccepted bool   `json:"is_accepted"`
+}

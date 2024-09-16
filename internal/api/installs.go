@@ -13,27 +13,36 @@ func (a *API) APIStatus() {
 }
 
 // InstallDomainCDNStatus submits a request to check the status of the domain
-func (a *API) InstallDomainCDNStatus(install, domainID string) (InstallDomainCDNStatusResponse, error) {
-	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/installs/%s/domains/%s/check_status", a.Config.BaseURL, install, domainID), nil)
-	if err != nil {
-		return InstallDomainCDNStatusResponse{}, err
+func (a *API) InstallDomainCDNStatus(install, domainID string) (objAccepted, error) {
+	oa := objAccepted{
+		ID:         domainID,
+		IsAccepted: false,
 	}
 
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", a.Config.AuthToken))
+	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/installs/%s/domains/%s/check_status", a.Config.BaseURL, install, domainID), nil)
+	if err != nil {
+		return oa, err
+	}
+	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
+
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return InstallDomainCDNStatusResponse{}, err
+		return oa, err
 	}
 	defer res.Body.Close()
 
-	ir := InstallDomainCDNStatusResponse{}
-	err = json.NewDecoder(res.Body).Decode(&ir)
+	err = a.checkErrorResponse(res)
 	if err != nil {
-		return InstallDomainCDNStatusResponse{}, err
+		return oa, err
 	}
 
-	return ir, nil
+	// NOTE: For some reason I'm only ever getting a status code of 202.
+	if res.StatusCode == http.StatusAccepted {
+		oa.IsAccepted = true
+		return oa, nil
+	}
 
+	return oa, nil
 }
 
 func (a *API) InstallsList(page int, accountID string) (installResponse, error) {
