@@ -69,6 +69,15 @@ func (a *API) checkErrorResponse(res *http.Response) error {
 			return err
 		}
 		return er
+	case http.StatusTooManyRequests:
+		return errorResponse{
+			Message: "API rate limit exceeded",
+		}
+	case http.StatusServiceUnavailable:
+		return errorResponse{
+			Message: "API is currently unavailable",
+		}
+
 	}
 
 	return nil

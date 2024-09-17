@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -163,7 +164,45 @@ func (a *API) AccountsUsersDelete(accountID, userID string) (objDeleted, error) 
 	return od, nil
 }
 
-func (a *API) AccountsUsersCreate(accountID string) error {
-	// req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/accounts/%s/account_users", a.Config.BaseURL, accountID), nil)
-	return nil
+func (a *API) AccountsUsersCreate(accountID, firstname, lastname, email, role string, installs []string) (userCreateReponse, error) {
+	ucr := userCreateReponse{}
+
+	uc := userCreateRequest{
+		userCreateUser{
+			FirstName:  firstname,
+			LastName:   lastname,
+			Email:      email,
+			Role:       role,
+			InstallIDs: installs,
+		},
+	}
+
+	j, err := json.Marshal(uc)
+	if err != nil {
+		return ucr, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/accounts/%s/account_users", a.Config.BaseURL, accountID), bytes.NewBuffer(j))
+	if err != nil {
+		return ucr, err
+	}
+	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return ucr, err
+	}
+	defer res.Body.Close()
+
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return ucr, err
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&ucr)
+	if err != nil {
+		return ucr, err
+	}
+
+	return ucr, nil
 }
