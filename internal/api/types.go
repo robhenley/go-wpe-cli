@@ -27,15 +27,21 @@ type user struct {
 	Installs       []install `json:"installs"`
 }
 
+type userCreateUser struct {
+	AccountID  string   `json:"account_id"`
+	FirstName  string   `json:"first_name"`
+	LastName   string   `json:"last_name"`
+	Email      string   `json:"email"`
+	Role       string   `json:"roles"`
+	InstallIDs []string `json:"install_ids"`
+}
 type userCreateRequest struct {
-	User struct {
-		AccountID  string   `json:"account_id"`
-		FirstName  string   `json:"first_name"`
-		LastName   string   `json:"last_name"`
-		Email      string   `json:"email"`
-		Roles      string   `json:"roles"`
-		InstallIds []string `json:"install_ids"`
-	} `json:"user"`
+	User userCreateUser `json:"user"`
+}
+
+type userCreateReponse struct {
+	Message     string `json:"message"`
+	AccountUser user   `json:"account_user"`
 }
 
 type site struct {
