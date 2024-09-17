@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 )
 
 func (a *API) InstallDomainsList(installID string, page int) ([]domain, error) {
@@ -149,4 +150,53 @@ func (a *API) InstallsDomainsCreate(installID, name, redirect string, primary bo
 	}
 
 	return d, nil
+}
+
+// TODO: Removing a redirect is not working
+func (a *API) InstallsDomainsUpdate(installID, domainID, redirect string, primary bool) (domain, error) {
+	d := domain{}
+
+	updateReq := struct {
+		Primary    bool   `json:"primary,omitempty"`
+		RedirectTo string `json:"redirect_to"`
+	}{
+		Primary:    primary,
+		RedirectTo: redirect,
+	}
+
+	j, err := json.Marshal(updateReq)
+	if err != nil {
+		return d, err
+	}
+
+	fmt.Fprintf(os.Stdout, "%s", j)
+
+	req, err := http.NewRequest(http.MethodPatch, fmt.Sprintf("%s/installs/%s/domains/%s", a.Config.BaseURL, installID, domainID), bytes.NewReader(j))
+	if err != nil {
+		return d, err
+	}
+	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return d, err
+	}
+	defer res.Body.Close()
+
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return d, err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		return d, fmt.Errorf("%s", res.Status)
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&d)
+	if err != nil {
+		return d, err
+	}
+
+	return d, nil
+
 }

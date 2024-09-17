@@ -51,11 +51,12 @@ func (a *API) Status() (status, error) {
 func (e errorResponse) Error() string {
 	text := fmt.Sprint(e.Message)
 
-	// if len(e.Errors) > 0 {
-	// 	for _, v := range e.Errors {
-	// 		text += fmt.Sprintf("Resource: %s Field: %s Type: %s Code: %s Message: %s\n", v.Resource, v.Field, v.Type, v.Code, v.Message)
-	// 	}
-	// }
+	if len(e.Errors) > 0 {
+		text += "\n\nErrors:"
+		for _, v := range e.Errors {
+			text += fmt.Sprintf("\nResource: %s\nField:%s\nType:%s\nCode:%s\nMessage: %s\n", v.Resource, v.Field, v.Type, v.Code, v.Message)
+		}
+	}
 
 	return text
 }

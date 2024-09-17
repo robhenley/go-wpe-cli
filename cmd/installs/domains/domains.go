@@ -19,5 +19,6 @@ func init() {
 	DomainsCmd.AddCommand(installsDomainsDeleteCmd)
 	DomainsCmd.AddCommand(installsDomainsListCmd)
 	DomainsCmd.AddCommand(installsDomainsCreateCmd)
+	DomainsCmd.AddCommand(installsDomainsUpdateCmd)
 	DomainsCmd.AddCommand(installsDomainsCdnStatusCmd)
 }
