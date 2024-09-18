@@ -153,6 +153,47 @@ func (a *API) InstallsCreate(name, accountID, siteID, environment string) (insta
 	return install, nil
 }
 
+func (a *API) InstallsUpdate(installID, siteID, environment string) (install, error) {
+	install := install{}
+
+	ur := struct {
+		SiteID      string `json:"site_id,omitempty"`
+		Environment string `json:"environment,omitempty"`
+	}{
+		SiteID:      siteID,
+		Environment: environment,
+	}
+
+	j, err := json.Marshal(ur)
+	if err != nil {
+		return install, err
+	}
+
+	req, err := http.NewRequest(http.MethodPatch, fmt.Sprintf("%s/installs/%s", a.Config.BaseURL, installID), bytes.NewReader(j))
+	if err != nil {
+		return install, err
+	}
+	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return install, err
+	}
+	defer res.Body.Close()
+
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return install, err
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&install)
+	if err != nil {
+		return install, err
+	}
+
+	return install, nil
+}
+
 func (a *API) InstallsCachePurge(installID, cacheType string) (installPurgeCacheResponse, error) {
 	pr := installPurgeCacheResponse{
 		CacheType: cacheType,
