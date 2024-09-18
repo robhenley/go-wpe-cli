@@ -35,7 +35,8 @@ func sitesDelete(cmd *cobra.Command, args []string) {
 	format, err := cmd.Flags().GetString("format")
 	cobra.CheckErr(err)
 
-	isDeleted := api.SitesDelete(siteID)
+	isDeleted, err := api.SitesDelete(siteID)
+	cobra.CheckErr(err)
 
 	out := struct {
 		IsDeleted bool   `json:"is_deleted"`

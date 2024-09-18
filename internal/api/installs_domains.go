@@ -32,8 +32,9 @@ func (a *API) InstallDomainsList(installID string, page int) ([]domain, error) {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusOK {
-		return []domain{}, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return []domain{}, err
 	}
 
 	dr := installDomainsListResponse{}
@@ -59,8 +60,9 @@ func (a *API) InstallsDomainsGet(installID, domainID string) (domain, error) {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusOK {
-		return d, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return d, err
 	}
 
 	err = json.NewDecoder(res.Body).Decode(&d)
@@ -140,8 +142,9 @@ func (a *API) InstallsDomainsCreate(installID, name, redirect string, primary bo
 		return d, er
 	}
 
-	if res.StatusCode != http.StatusCreated {
-		return d, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return d, err
 	}
 
 	err = json.NewDecoder(res.Body).Decode(&d)
@@ -186,10 +189,6 @@ func (a *API) InstallsDomainsUpdate(installID, domainID, redirect string, primar
 	err = a.checkErrorResponse(res)
 	if err != nil {
 		return d, err
-	}
-
-	if res.StatusCode != http.StatusOK {
-		return d, fmt.Errorf("%s", res.Status)
 	}
 
 	err = json.NewDecoder(res.Body).Decode(&d)

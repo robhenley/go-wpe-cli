@@ -31,8 +31,9 @@ func (a *API) InstallsBackupsCreate(installID, description string, emails []stri
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusAccepted {
-		return bres, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return bres, err
 	}
 
 	err = json.NewDecoder(res.Body).Decode(&bres)
@@ -57,8 +58,9 @@ func (a *API) InstallsBackupsGet(installID, backupID string) (backupResponse, er
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusOK {
-		return bres, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return bres, err
 	}
 
 	err = json.NewDecoder(res.Body).Decode(&bres)

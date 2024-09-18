@@ -40,7 +40,8 @@ func sitesCreate(cmd *cobra.Command, args []string) {
 	format, err := cmd.Flags().GetString("format")
 	cobra.CheckErr(err)
 
-	site := api.SitesCreate(accountID, name)
+	site, err := api.SitesCreate(accountID, name)
+	cobra.CheckErr(err)
 
 	if strings.ToLower(format) == "json" {
 		j, err := json.Marshal(site)

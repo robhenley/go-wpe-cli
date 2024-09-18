@@ -6,14 +6,14 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 )
 
-func (a *API) SitesList(page int) sitesListResponse {
+func (a *API) SitesList(page int) (sitesListResponse, error) {
+	slr := sitesListResponse{}
+
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/sites", a.Config.BaseURL), nil)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return slr, err
 	}
 	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
 
@@ -30,71 +30,65 @@ func (a *API) SitesList(page int) sitesListResponse {
 
 	response, err := http.DefaultClient.Do(req)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return slr, err
 	}
 	defer response.Body.Close()
 
-	if response.StatusCode != http.StatusOK {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", response.Status)
-		os.Exit(1)
+	err = a.checkErrorResponse(response)
+	if err != nil {
+		return slr, err
 	}
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return slr, err
 	}
 
-	lr := sitesListResponse{}
-	err = json.Unmarshal(body, &lr)
+	err = json.Unmarshal(body, &slr)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return slr, err
 	}
 
-	return lr
+	return slr, nil
 }
 
-func (a *API) SitesGet(id string) site {
+func (a *API) SitesGet(id string) (site, error) {
+	s := site{}
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/sites/%s", a.Config.BaseURL, id), nil)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return s, err
 	}
 	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
 
 	response, err := http.DefaultClient.Do(req)
 	if err != nil {
-		fmt.Fprintf(os.Stdout, "Error: %v\n", err)
-		os.Exit(1)
+		return s, err
 	}
 	defer response.Body.Close()
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return s, err
 	}
 
-	if response.StatusCode != http.StatusOK {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", response.Status)
-		os.Exit(1)
+	err = a.checkErrorResponse(response)
+	if err != nil {
+		return s, err
 	}
 
-	s := site{}
 	err = json.Unmarshal(body, &s)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return s, err
 	}
 
-	return s
+	return s, nil
 
 }
 
-func (a *API) SitesCreate(accountID, name string) site {
+func (a *API) SitesCreate(accountID, name string) (site, error) {
+	s := site{}
+
 	pr := sitesCreateRequest{
 		Name:      name,
 		AccountID: accountID,
@@ -102,14 +96,12 @@ func (a *API) SitesCreate(accountID, name string) site {
 
 	j, err := json.Marshal(pr)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return s, err
 	}
 
 	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/sites", a.Config.BaseURL), bytes.NewReader(j))
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return s, err
 	}
 
 	req.Header.Add("Content-Type", "application/json")
@@ -117,99 +109,89 @@ func (a *API) SitesCreate(accountID, name string) site {
 
 	response, err := http.DefaultClient.Do(req)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return s, err
 	}
 	defer response.Body.Close()
 
-	if response.StatusCode != http.StatusCreated {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", response.Status)
-		os.Exit(1)
+	err = a.checkErrorResponse(response)
+	if err != nil {
+		return s, err
 	}
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return s, err
 	}
 
-	s := site{}
 	err = json.Unmarshal(body, &s)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return s, err
 	}
 
-	return s
+	return s, nil
 }
 
-func (a *API) SitesDelete(id string) bool {
+func (a *API) SitesDelete(id string) (bool, error) {
 	req, err := http.NewRequest(http.MethodDelete, fmt.Sprintf("%s/sites/%s", a.Config.BaseURL, id), nil)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return false, err
 	}
 	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
 
 	response, err := http.DefaultClient.Do(req)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return false, err
 	}
 	defer response.Body.Close()
 
-	if response.StatusCode != http.StatusNoContent {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", response.Status)
-		os.Exit(1)
+	err = a.checkErrorResponse(response)
+	if err != nil {
+		return false, err
 	}
 
-	return true
+	return true, nil
 }
 
-func (a *API) SitesUpdate(siteID, siteName string) site {
+func (a *API) SitesUpdate(siteID, siteName string) (site, error) {
+	s := site{}
+
 	su := site{
 		Name: siteName,
 	}
 
 	j, err := json.Marshal(su)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return s, err
 	}
 
 	req, err := http.NewRequest(http.MethodPatch, fmt.Sprintf("%s/sites/%s", a.Config.BaseURL, siteID), bytes.NewReader(j))
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return s, err
 	}
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", "Basic "+a.Config.AuthToken)
 
 	response, err := http.DefaultClient.Do(req)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return s, err
 	}
 	defer response.Body.Close()
 
-	if response.StatusCode != http.StatusOK {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", response.Status)
-		os.Exit(1)
+	err = a.checkErrorResponse(response)
+	if err != nil {
+		return s, err
 	}
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return s, err
 	}
 
-	s := site{}
 	err = json.Unmarshal(body, &s)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-		os.Exit(1)
+		return s, err
 	}
 
-	return s
+	return s, nil
 
 }

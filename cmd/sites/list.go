@@ -38,7 +38,8 @@ func sitesList(cmd *cobra.Command, args []string) {
 	page, err := cmd.Flags().GetInt("page")
 	cobra.CheckErr(err)
 
-	response := api.SitesList(page)
+	response, err := api.SitesList(page)
+	cobra.CheckErr(err)
 
 	if strings.ToLower(format) == "json" {
 		j, err := json.Marshal(response)

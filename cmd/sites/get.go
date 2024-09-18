@@ -34,7 +34,8 @@ func sitesGet(cmd *cobra.Command, args []string) {
 	format, err := cmd.Flags().GetString("format")
 	cobra.CheckErr(err)
 
-	site := api.SitesGet(siteID)
+	site, err := api.SitesGet(siteID)
+	cobra.CheckErr(err)
 
 	if strings.ToLower(format) == "json" {
 		j, err := json.Marshal(site)
