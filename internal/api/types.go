@@ -39,7 +39,8 @@ type userCreateRequest struct {
 	User userCreateUser `json:"user"`
 }
 
-type userCreateReponse struct {
+// Used for both create and update
+type accountUserResponse struct {
 	Message     string `json:"message"`
 	AccountUser user   `json:"account_user"`
 }

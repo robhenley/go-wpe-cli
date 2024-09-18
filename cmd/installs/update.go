@@ -8,6 +8,7 @@ import (
 
 	"github.com/robhenley/go-wpe-cli/cmd/types"
 	"github.com/robhenley/go-wpe-cli/internal/api"
+	"github.com/robhenley/go-wpe-cli/internal/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -43,8 +44,8 @@ func installsUpdate(cmd *cobra.Command, args []string) {
 	cobra.CheckErr(err)
 
 	if len(environment) > 0 {
-		if !isValidEnvironment(environment) {
-			cobra.CheckErr("Invalid environment type specified. Valid types are: development, staging, and production")
+		if !helpers.IsValidEnvironment(environment) {
+			cobra.CheckErr(fmt.Errorf("invalid environment type specified. Valid types are: %s", strings.Join(helpers.IsValidEnvironments(), " ")))
 		}
 	}
 

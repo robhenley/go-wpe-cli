@@ -169,8 +169,8 @@ func (a *API) AccountsUsersDelete(accountID, userID string) (objDeleted, error) 
 	return od, nil
 }
 
-func (a *API) AccountsUsersCreate(accountID, firstname, lastname, email, role string, installs []string) (userCreateReponse, error) {
-	ucr := userCreateReponse{}
+func (a *API) AccountsUsersCreate(accountID, firstname, lastname, email, role string, installs []string) (accountUserResponse, error) {
+	ucr := accountUserResponse{}
 
 	uc := userCreateRequest{
 		userCreateUser{
@@ -210,4 +210,46 @@ func (a *API) AccountsUsersCreate(accountID, firstname, lastname, email, role st
 	}
 
 	return ucr, nil
+}
+
+func (a *API) AccountsUsersUpdate(accountID, userID, role string, installs []string) (accountUserResponse, error) {
+	aur := accountUserResponse{}
+
+	ur := struct {
+		Role       string   `json:"roles"`
+		InstallIDs []string `json:"install_ids,omitempty"`
+	}{
+		Role:       role,
+		InstallIDs: installs,
+	}
+
+	j, err := json.Marshal(ur)
+	if err != nil {
+		return aur, err
+	}
+
+	req, err := http.NewRequest(http.MethodPatch, fmt.Sprintf("%s/accounts/%s/account_users/%s", a.Config.BaseURL, accountID, userID), bytes.NewBuffer(j))
+	if err != nil {
+		return aur, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return aur, err
+	}
+	defer res.Body.Close()
+
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return aur, err
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&aur)
+	if err != nil {
+		return aur, err
+	}
+
+	return aur, nil
 }
