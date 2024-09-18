@@ -21,8 +21,9 @@ func (a *API) CurrentUserGet() (currentUser, error) {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusOK {
-		return cu, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return cu, err
 	}
 
 	err = json.NewDecoder(res.Body).Decode(&cu)

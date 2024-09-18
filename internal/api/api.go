@@ -78,8 +78,8 @@ func (a *API) checkErrorResponse(res *http.Response) error {
 		return errorResponse{
 			Message: "API is currently unavailable",
 		}
+	default:
+		return fmt.Errorf("%s", res.Status)
 
 	}
-
-	return nil
 }

@@ -34,8 +34,9 @@ func (a *API) AccountsList(page int) ([]account, error) {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusOK {
-		return accounts, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return accounts, err
 	}
 
 	ar := accountsResponse{}
@@ -61,8 +62,9 @@ func (a *API) AccountsGet(accountID string) (account, error) {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusOK {
-		return account, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return account, err
 	}
 
 	err = json.NewDecoder(res.Body).Decode(&account)
@@ -99,8 +101,9 @@ func (a *API) AccountsUsersList(accountID string, page int) ([]user, error) {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusOK {
-		return users, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return users, err
 	}
 
 	ur := accountsUsersResponse{}
@@ -126,8 +129,9 @@ func (a *API) AccountsUsersGet(accountID, userID string) (user, error) {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusOK {
-		return u, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return u, err
 	}
 
 	err = json.NewDecoder(res.Body).Decode(&u)
@@ -155,8 +159,9 @@ func (a *API) AccountsUsersDelete(accountID, userID string) (objDeleted, error) 
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusNoContent {
-		return od, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return od, err
 	}
 
 	od.IsDeleted = true

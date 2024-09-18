@@ -73,8 +73,9 @@ func (a *API) InstallsList(page int, accountID string) (installResponse, error) 
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusOK {
-		return installResponse{}, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return installResponse{}, err
 	}
 
 	ir := installResponse{}
@@ -102,8 +103,9 @@ func (a *API) InstallsGet(installID string) (install, error) {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusOK {
-		return install, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return install, err
 	}
 
 	err = json.NewDecoder(res.Body).Decode(&install)
@@ -141,8 +143,9 @@ func (a *API) InstallsCreate(name, accountID, siteID, environment string) (insta
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusCreated {
-		return install, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return install, err
 	}
 
 	err = json.NewDecoder(res.Body).Decode(&install)
@@ -224,11 +227,10 @@ func (a *API) InstallsCachePurge(installID, cacheType string) (installPurgeCache
 		return pr, err
 	}
 
-	if res.StatusCode != http.StatusAccepted {
-		return pr, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return pr, err
 	}
-
-	pr.IsPurged = true
 
 	return pr, nil
 }
@@ -256,8 +258,9 @@ func (a *API) InstallsDelete(installID string) (objDeleted, error) {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusNoContent {
-		return od, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return od, err
 	}
 
 	od.IsDeleted = true

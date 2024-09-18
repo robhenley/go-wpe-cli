@@ -19,7 +19,7 @@ var updateCmd = &cobra.Command{
 	Run:   sitesUpdate,
 }
 
-func initt() {
+func init() {
 	updateCmd.Flags().StringP("site", "s", "", "The ID of the site to update")
 	updateCmd.MarkFlagRequired("site")
 
@@ -40,7 +40,8 @@ func sitesUpdate(cmd *cobra.Command, args []string) {
 	format, err := cmd.Flags().GetString("format")
 	cobra.CheckErr(err)
 
-	site := api.SitesUpdate(siteID, siteName)
+	site, err := api.SitesUpdate(siteID, siteName)
+	cobra.CheckErr(err)
 
 	if strings.ToLower(format) == "json" {
 		j, err := json.Marshal(site)

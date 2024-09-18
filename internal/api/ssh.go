@@ -34,8 +34,9 @@ func (a *API) SSHKeysList(page int) ([]sshKey, error) {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusOK {
-		return keys, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return keys, err
 	}
 
 	skr := sshKeyResponse{}
@@ -72,7 +73,8 @@ func (a *API) SSHKeysCreate(publicKey string) (sshKey, error) {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusCreated {
+	err = a.checkErrorResponse(res)
+	if err != nil {
 		return key, fmt.Errorf("%s", res.Status)
 	}
 
@@ -101,8 +103,9 @@ func (a *API) SSHKeyDelete(keyID string) (objDeleted, error) {
 	}
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusNoContent {
-		return od, fmt.Errorf("%s", res.Status)
+	err = a.checkErrorResponse(res)
+	if err != nil {
+		return od, err
 	}
 
 	od.IsDeleted = true
