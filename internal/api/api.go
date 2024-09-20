@@ -61,7 +61,7 @@ func (e errorResponse) Error() string {
 	return text
 }
 
-func (a *API) checkErrorResponse(res *http.Response) error {
+func (a *API) checkResponse(res *http.Response) error {
 	switch res.StatusCode {
 	case http.StatusOK, http.StatusCreated, http.StatusAccepted, http.StatusNoContent:
 		return nil

@@ -31,7 +31,7 @@ func (a *API) InstallDomainCDNStatus(install, domainID string) (objAccepted, err
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return oa, err
 	}
@@ -73,7 +73,7 @@ func (a *API) InstallsList(page int, accountID string) (installResponse, error) 
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return installResponse{}, err
 	}
@@ -103,7 +103,7 @@ func (a *API) InstallsGet(installID string) (install, error) {
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return install, err
 	}
@@ -144,7 +144,7 @@ func (a *API) InstallsCreate(name, accountID, siteID, environment string) (insta
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return install, err
 	}
@@ -186,7 +186,7 @@ func (a *API) InstallsUpdate(installID, siteID, environment string) (install, er
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return install, err
 	}
@@ -230,7 +230,7 @@ func (a *API) InstallsCachePurge(installID, cacheType string) (installPurgeCache
 		return pr, err
 	}
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return pr, err
 	}
@@ -261,7 +261,7 @@ func (a *API) InstallsDelete(installID string) (objDeleted, error) {
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return od, err
 	}

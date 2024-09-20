@@ -34,7 +34,7 @@ func (a *API) AccountsList(page int) ([]account, error) {
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return accounts, err
 	}
@@ -62,7 +62,7 @@ func (a *API) AccountsGet(accountID string) (account, error) {
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return account, err
 	}
@@ -101,7 +101,7 @@ func (a *API) AccountsUsersList(accountID string, page int) ([]user, error) {
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return users, err
 	}
@@ -129,7 +129,7 @@ func (a *API) AccountsUsersGet(accountID, userID string) (user, error) {
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return u, err
 	}
@@ -159,7 +159,7 @@ func (a *API) AccountsUsersDelete(accountID, userID string) (objDeleted, error) 
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return od, err
 	}
@@ -200,7 +200,7 @@ func (a *API) AccountsUsersCreate(accountID, firstname, lastname, email, role st
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return ucr, err
 	}
@@ -242,7 +242,7 @@ func (a *API) AccountsUsersUpdate(accountID, userID, role string, installs []str
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return aur, err
 	}

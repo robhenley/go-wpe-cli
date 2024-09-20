@@ -33,7 +33,7 @@ func (a *API) InstallsBackupsCreate(installID, description string, emails []stri
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return bres, err
 	}
@@ -60,7 +60,7 @@ func (a *API) InstallsBackupsGet(installID, backupID string) (backupResponse, er
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return bres, err
 	}
