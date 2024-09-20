@@ -21,7 +21,7 @@ func (a *API) CurrentUserGet() (currentUser, error) {
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return cu, err
 	}

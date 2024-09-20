@@ -34,7 +34,7 @@ func (a *API) SitesList(page int) (sitesListResponse, error) {
 	}
 	defer response.Body.Close()
 
-	err = a.checkErrorResponse(response)
+	err = a.checkResponse(response)
 	if err != nil {
 		return slr, err
 	}
@@ -72,7 +72,7 @@ func (a *API) SitesGet(id string) (site, error) {
 		return s, err
 	}
 
-	err = a.checkErrorResponse(response)
+	err = a.checkResponse(response)
 	if err != nil {
 		return s, err
 	}
@@ -113,7 +113,7 @@ func (a *API) SitesCreate(accountID, name string) (site, error) {
 	}
 	defer response.Body.Close()
 
-	err = a.checkErrorResponse(response)
+	err = a.checkResponse(response)
 	if err != nil {
 		return s, err
 	}
@@ -144,7 +144,7 @@ func (a *API) SitesDelete(id string) (bool, error) {
 	}
 	defer response.Body.Close()
 
-	err = a.checkErrorResponse(response)
+	err = a.checkResponse(response)
 	if err != nil {
 		return false, err
 	}
@@ -177,7 +177,7 @@ func (a *API) SitesUpdate(siteID, siteName string) (site, error) {
 	}
 	defer response.Body.Close()
 
-	err = a.checkErrorResponse(response)
+	err = a.checkResponse(response)
 	if err != nil {
 		return s, err
 	}

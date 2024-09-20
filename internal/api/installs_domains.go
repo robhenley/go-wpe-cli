@@ -32,7 +32,7 @@ func (a *API) InstallDomainsList(installID string, page int) ([]domain, error) {
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return []domain{}, err
 	}
@@ -60,7 +60,7 @@ func (a *API) InstallsDomainsGet(installID, domainID string) (domain, error) {
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return d, err
 	}
@@ -91,7 +91,7 @@ func (a *API) InstallsDomainsDelete(installID, domainID string) (objDeleted, err
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return od, err
 	}
@@ -143,7 +143,7 @@ func (a *API) InstallsDomainsCreate(installID, name, redirect string, primary bo
 		return d, er
 	}
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return d, err
 	}
@@ -188,7 +188,7 @@ func (a *API) InstallsDomainsUpdate(installID, domainID, redirect string, primar
 	}
 	defer res.Body.Close()
 
-	err = a.checkErrorResponse(res)
+	err = a.checkResponse(res)
 	if err != nil {
 		return d, err
 	}
