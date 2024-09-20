@@ -13,7 +13,7 @@ import (
 	"github.com/robhenley/go-wpe-cli/cmd/accounts"
 	"github.com/robhenley/go-wpe-cli/cmd/installs"
 	"github.com/robhenley/go-wpe-cli/cmd/sites"
-	"github.com/robhenley/go-wpe-cli/cmd/ssh_keys"
+	"github.com/robhenley/go-wpe-cli/cmd/ssh/keys"
 	"github.com/robhenley/go-wpe-cli/cmd/types"
 	users "github.com/robhenley/go-wpe-cli/cmd/user"
 	"github.com/spf13/cobra"
@@ -50,7 +50,7 @@ func init() {
 	rootCmd.AddCommand(installs.InstallsCmd)
 	rootCmd.AddCommand(accounts.AccountsCmd)
 	rootCmd.AddCommand(users.UsersCmd)
-	rootCmd.AddCommand(ssh_keys.SSHKeysCmd)
+	rootCmd.AddCommand(keys.SSHKeysCmd)
 }
 
 func initConfig() {
