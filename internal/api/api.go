@@ -63,6 +63,8 @@ func (e errorResponse) Error() string {
 
 func (a *API) checkErrorResponse(res *http.Response) error {
 	switch res.StatusCode {
+	case http.StatusOK, http.StatusCreated, http.StatusAccepted, http.StatusNoContent:
+		return nil
 	case http.StatusBadRequest, http.StatusInternalServerError, http.StatusUnauthorized:
 		er := errorResponse{}
 		err := json.NewDecoder(res.Body).Decode(&er)
