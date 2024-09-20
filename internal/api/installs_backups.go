@@ -24,7 +24,9 @@ func (a *API) InstallsBackupsCreate(installID, description string, emails []stri
 	if err != nil {
 		return bres, err
 	}
+	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
+
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return bres, err

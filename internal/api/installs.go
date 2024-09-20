@@ -135,6 +135,7 @@ func (a *API) InstallsCreate(name, accountID, siteID, environment string) (insta
 	if err != nil {
 		return install, err
 	}
+	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
 
 	res, err := http.DefaultClient.Do(req)
@@ -176,6 +177,7 @@ func (a *API) InstallsUpdate(installID, siteID, environment string) (install, er
 	if err != nil {
 		return install, err
 	}
+	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
 
 	res, err := http.DefaultClient.Do(req)
@@ -220,6 +222,7 @@ func (a *API) InstallsCachePurge(installID, cacheType string) (installPurgeCache
 	if err != nil {
 		return pr, err
 	}
+	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
 
 	res, err := http.DefaultClient.Do(req)
