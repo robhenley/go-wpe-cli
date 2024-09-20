@@ -15,7 +15,7 @@ import (
 	"github.com/robhenley/go-wpe-cli/cmd/sites"
 	"github.com/robhenley/go-wpe-cli/cmd/ssh/keys"
 	"github.com/robhenley/go-wpe-cli/cmd/types"
-	users "github.com/robhenley/go-wpe-cli/cmd/user"
+	"github.com/robhenley/go-wpe-cli/cmd/users"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
