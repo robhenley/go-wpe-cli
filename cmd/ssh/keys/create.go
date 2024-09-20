@@ -1,4 +1,4 @@
-package ssh_keys
+package keys
 
 import (
 	"encoding/json"
