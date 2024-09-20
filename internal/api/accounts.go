@@ -191,6 +191,7 @@ func (a *API) AccountsUsersCreate(accountID, firstname, lastname, email, role st
 	if err != nil {
 		return ucr, err
 	}
+	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
 
 	res, err := http.DefaultClient.Do(req)

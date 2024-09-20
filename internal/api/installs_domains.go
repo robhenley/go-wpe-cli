@@ -124,6 +124,7 @@ func (a *API) InstallsDomainsCreate(installID, name, redirect string, primary bo
 	if err != nil {
 		return d, err
 	}
+	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
 
 	res, err := http.DefaultClient.Do(req)
@@ -178,6 +179,7 @@ func (a *API) InstallsDomainsUpdate(installID, domainID, redirect string, primar
 	if err != nil {
 		return d, err
 	}
+	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
 
 	res, err := http.DefaultClient.Do(req)
