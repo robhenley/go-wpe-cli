@@ -66,7 +66,24 @@ wpe installs list --ui | wpe installs purge - cdn
 ```
 
 ## Build Instructions
-A placeholder for build instructions...
+The standard `go build` should work but there is also a [GNU
+Make](https://www.gnu.org/software/make/) Makefile.  It has the following usage:
+
+```text
+Usage:
+  help         print this help message
+  tidy         format code and tidy modfile
+  audit        run quality control checks
+  test         run all tests
+  test/cover   run all tests and display coverage
+  build        build the application
+  run          run the application
+```
+
+To build just run:
+```bash
+make build
+```
 
 ## TODO
 
