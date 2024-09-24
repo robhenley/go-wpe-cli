@@ -21,4 +21,5 @@ func init() {
 	DomainsCmd.AddCommand(installsDomainsCreateCmd)
 	DomainsCmd.AddCommand(installsDomainsUpdateCmd)
 	DomainsCmd.AddCommand(installsDomainsCdnStatusCmd)
+	DomainsCmd.AddCommand(installsDomainsBulkCreateCmd)
 }

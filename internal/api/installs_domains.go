@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 )
 
 func (a *API) InstallDomainsList(installID string, page int) ([]domain, error) {
@@ -200,4 +201,33 @@ func (a *API) InstallsDomainsUpdate(installID, domainID, redirect string, primar
 
 	return d, nil
 
+}
+
+func (a *API) InstallsDomainsBulkCreate(installID string, body string) (BulkDomainsResponse, error) {
+	bdr := BulkDomainsResponse{}
+
+	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/installs/%s/domains/bulk", a.Config.BaseURL, installID), strings.NewReader(body))
+	if err != nil {
+		return bdr, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return bdr, err
+	}
+	defer res.Body.Close()
+
+	err = a.checkResponse(res)
+	if err != nil {
+		return bdr, err
+	}
+
+	err = json.NewDecoder(res.Body).Decode(&bdr)
+	if err != nil {
+		return bdr, err
+	}
+
+	return bdr, nil
 }

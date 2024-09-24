@@ -108,7 +108,7 @@ make build
 - [X] PATCH  /installs/{install_id}
 - [X] GET    /installs/{install_id}/domains
 - [X] POST   /installs/{install_id}/domains
-- [ ] POST   /installs/{install_id}/domains/bulk
+- [X] POST   /installs/{install_id}/domains/bulk
 - [X] GET    /installs/{install_id}/domains/{domain_id}
 - [X] PATCH  /installs/{install_id}/domains/{domain_id}
 - [X] DELETE /installs/{install_id}/domains/{domain_id}
