@@ -197,3 +197,13 @@ type objAccepted struct {
 	ID         string `json:"id"`
 	IsAccepted bool   `json:"is_accepted"`
 }
+
+type BulkDomains struct {
+	Domains []struct {
+		Name       string `json:"name"`
+		RedirectTo string `json:"redirect_to,omitempty"`
+	} `json:"domains"`
+}
+type BulkDomainsResponse struct {
+	Domains []domain `json:"domains"`
+}
