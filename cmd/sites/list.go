@@ -28,6 +28,7 @@ NOTE: Both tags and groups are case insensitive.
 
 func init() {
 	listCmd.Flags().StringSliceP("filters", "f", []string{}, "Filter the list of sites")
+	listCmd.Flags().Bool("include-installs", false, "Include the sites installs as well")
 	listCmd.Flags().Int("page", 1, "The page to return")
 	listCmd.Flags().Int("limit", 100, "Limit the number of results")
 }
@@ -37,6 +38,9 @@ func sitesList(cmd *cobra.Command, args []string) {
 	api := api.NewAPI(config)
 
 	filters, err := cmd.Flags().GetStringSlice("filters")
+	cobra.CheckErr(err)
+
+	shouldListInstalls, err := cmd.Flags().GetBool("include-installs")
 	cobra.CheckErr(err)
 
 	limit, err := cmd.Flags().GetInt("limit")
@@ -62,7 +66,18 @@ func sitesList(cmd *cobra.Command, args []string) {
 
 	if len(sites) > 0 {
 		for _, site := range sites {
-			fmt.Fprintf(os.Stdout, "%s\t%-15s\t%s\n", site.ID, site.GroupName, site.Name)
+
+			if shouldListInstalls && len(site.Installs) > 0 {
+
+				for _, install := range site.Installs {
+					fmt.Fprintf(os.Stdout, "%s %-15s %-30s", site.ID, site.GroupName, site.Name)
+					fmt.Fprintf(os.Stdout, "%s %s %s multisite(%t)\n", install.ID, install.Environment, install.Name, install.IsMultisite)
+				}
+
+			} else {
+				fmt.Fprintf(os.Stdout, "%s %-15s %-30s\n", site.ID, site.GroupName, site.Name)
+			}
+
 		}
 	} else {
 		fmt.Println("No sites were returned.")
