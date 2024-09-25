@@ -6,14 +6,16 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"github.com/robhenley/go-wpe-cli/internal/helpers"
 )
 
-func (a *API) SitesList(page int) (sitesListResponse, error) {
-	slr := sitesListResponse{}
+func (a *API) SitesList(page int, filters []string) ([]site, error) {
+	sites := []site{}
 
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("%s/sites", a.Config.BaseURL), nil)
 	if err != nil {
-		return slr, err
+		return sites, err
 	}
 	req.Header.Set("Authorization", "Basic "+a.Config.AuthToken)
 
@@ -30,26 +32,38 @@ func (a *API) SitesList(page int) (sitesListResponse, error) {
 
 	response, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return slr, err
+		return sites, err
 	}
 	defer response.Body.Close()
 
 	err = a.checkResponse(response)
 	if err != nil {
-		return slr, err
+		return sites, err
 	}
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
-		return slr, err
+		return sites, err
 	}
 
+	slr := sitesListResponse{}
 	err = json.Unmarshal(body, &slr)
 	if err != nil {
-		return slr, err
+		return sites, err
 	}
 
-	return slr, nil
+	if len(filters) > 0 {
+		fm := helpers.PrepareFilters(filters)
+		for _, site := range slr.Results {
+			if helpers.HasTags(fm["tag"], site.Tags) || helpers.HasGroup(fm["group"], site.GroupName) {
+				sites = append(sites, site)
+			}
+		}
+		return sites, nil
+	}
+
+	return slr.Results, nil
+
 }
 
 func (a *API) SitesGet(id string) (site, error) {
